@@ -16,9 +16,9 @@ var reach_board_square_ind = [null,null]
 func _ready():
 	snake_body.position = Global.board_offset
 	initial_position = Global.board_pos[Vector2(3,3)]
-	initial_tail_position = Global.board_pos[Vector2(2,3)]
+	initial_tail_position = Global.board_pos[Vector2(1,3)]
 	var v = [2,3,5,6]
-	
+	print(Vector2(0,25).normalized(),' norm')
 	#print('orginal: ',v)
 	#v.insert(1,10)
 	#print('with 10 on 1: ',v)
@@ -64,16 +64,22 @@ func reach_point_to_board_square(point) -> bool:
 func reach_board_square():
 	if reach_point_to_board_square(0):
 		Global.solaped_board_squares.push_back(reach_board_square_ind[0])
-		snake_body.points[0] = Global.board_pos[reach_board_square_ind[0]]
-				#is_far_from_prev_center = Global.board_pos[Global.solaped_board_squares[-1]].distance_to(snake_body.points[0])
-		if direction_list.size() > 0:# and is_far_from_prev_center > 0:#Global.solaped_board_squares[-1]:
+		
+		if direction_list.size() > 0:
 			Global.direction = direction_list[0]
 			direction_list.pop_front()
-			#ajustar direction de la serpiente
-			
-		#prints(index,snake_body.points[0])
-#reach_board_square_ind = index
-#Repetir lo mismo con snake_body.points[last] para remover con pop_front()
+			head_reposition(Global.direction)
+			snake_body.set_point_position(1,Global.board_pos[reach_board_square_ind[0]])
+			#print(snake_body.points)
+	var dist = snake_body.points[-2].distance_to(snake_body.points[-1])
+	if dist < 1:
+		print('enter')
+		#snake_body.remove_point(1)
+		snake_body.remove_point(snake_body.get_point_count()-1)
+		#snake_body.points.pop_back()
+		print(snake_body.points)
+	#print(dist)
+		
 	
 func change_velocity():
 	Global.velocity = Vector2()
@@ -86,9 +92,25 @@ func change_velocity():
 		Global.velocity.y += 1
 	if Global.direction == "up":
 		Global.velocity.y -= 1
-		
+	
+	Global.end_velocity = (snake_body.points[-2] - snake_body.points[-1]).normalized()
+	#print('end: ',Global.end_velocity)
 	if Global.velocity.length() > 0:
 		Global.velocity = Global.velocity.normalized() * Global.speed
+	if Global.end_velocity.length() > 0:
+		Global.end_velocity *= Global.end_speed
+
+func head_reposition(direction):
+	var new_pos = Global.board_pos[reach_board_square_ind[0]]
+	if direction == "right":
+		new_pos.x += 1
+	if direction == "left":
+		new_pos.x -= 1
+	if direction == "down":
+		new_pos.y += 1
+	if direction == "up":
+		new_pos.y -= 1
+	snake_body.add_point(new_pos,0) 
 
 func is_int(num):
 	return num - int(num) == 0
@@ -108,8 +130,10 @@ func round_almost_int(num,diference):
 		return num
 
 func move_snake(_delta):
-	for i in snake_body.get_point_count():
-		snake_body.points[i] += Global.velocity * _delta
+	#for i in snake_body.get_point_count():
+		#snake_body.points[i] += Global.velocity * _delta
+	snake_body.points[0] += Global.velocity * _delta
+	snake_body.points[-1] += Global.end_velocity * _delta
 
 func inputs():
 	if Input.is_action_just_pressed("ui_d"):
@@ -152,6 +176,7 @@ func is_horizontal(direction):
 
 func _process(delta):
 	Global.speed = speed_index * 25
+	Global.end_speed = Global.speed
 	#print('delta: ',delta)
 	inputs()
 	change_velocity()

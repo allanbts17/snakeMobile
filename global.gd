@@ -248,6 +248,7 @@ var board_squares = Vector2(15,16)
 var square_size = Vector2(43,43)
 var pixels_to_enlarge: float = 20
 var speed
+var end_speed
 var velocity
 var end_velocity
 var solaped_board_squares = []
