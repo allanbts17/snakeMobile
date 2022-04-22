@@ -16,7 +16,6 @@ var distance_to_prev_center = 30
 var is_far_from_prev_center
 var reach_board_square_ind = [null,null]
 var speed_step = 25
-var run = true
 var tail_stop
 var grow_step = 43
 # Called when the node enters the scene tree for the first time.
@@ -221,7 +220,7 @@ func tail_grow():
 			snake_size = get_snake_size()
 			
 func _process(delta):
-	if run:
+	if Global.run:
 		#print('delta: ',delta)
 		inputs()
 		change_velocity()
@@ -235,6 +234,6 @@ func _process(delta):
 
 
 func _on_apple_area_entered(area):
-	#run = false
+	
 	print('solaped: ',Global.solaped_board_squares)
 	Global.end_speed = 0

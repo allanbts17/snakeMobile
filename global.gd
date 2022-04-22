@@ -253,6 +253,8 @@ var velocity
 var end_velocity
 var solaped_board_squares = []
 var direction = 'right'
+var run = true
+var score = 0
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
