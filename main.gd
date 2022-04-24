@@ -242,6 +242,14 @@ func _on_apple_area_entered(area):
 
 func _on_snakeBodyArea_area_entered(area):
 	if area.get_name() == 'head':
-		print('colisión con head')
-		if !Global.body_invincibility:
+		print('colisión con body')
+		if !Global.body_invincibility and !Global.invincibility:
+			Global.run = false
+	
+
+
+func _on_border_area_entered(area):
+	if area.get_name() == 'head':
+		print('colisión con border')
+		if !Global.invincibility:
 			Global.run = false

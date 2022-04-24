@@ -3,6 +3,7 @@ extends Area2D
 var total_solaped_spaces = []
 var total_spaces = []
 onready var head = get_parent().get_node("head")
+onready var score = get_tree().root.get_node("main").get_node("upper_interface/score")
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -10,6 +11,7 @@ onready var head = get_parent().get_node("head")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	#print("tree: ",score.get_name())
 	pass # Replace with function body.
 
 
@@ -20,6 +22,7 @@ func _ready():
 
 func _on_apple_area_entered(area):
 	Global.body_invincibility = false
+	score.add_score(Global.apple_score)
 	total_solaped_spaces.clear()
 	total_spaces.clear()
 	#total_solaped_spaces = [] + Global.solaped_board_squares

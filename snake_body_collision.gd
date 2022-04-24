@@ -8,16 +8,7 @@ onready var snake_body = get_node("snakeBody")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	#var v1 = Vector2(0,10)
-	#var v2 = Vector2(0,30)
-	#print('angle to: ',rad2deg(v1.angle_to_point(v2)))
-	#print(get_children()[1].get_class())
-	#print('count: ',count_collision_shape())
-	print('test')
-	for x in range(2,4-1):
-		print(x)
 	pass # Replace with function body.
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):

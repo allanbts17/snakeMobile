@@ -1,13 +1,16 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://assets/background/board.png" type="Texture" id=1]
 [ext_resource path="res://assets/background/outside_board.png" type="Texture" id=2]
 [ext_resource path="res://main.gd" type="Script" id=3]
-[ext_resource path="res://test.gd" type="Script" id=4]
+[ext_resource path="res://fonts/Pirate Kids.otf" type="DynamicFontData" id=4]
 [ext_resource path="res://assets/food/apple.png" type="Texture" id=5]
 [ext_resource path="res://assets/snake/head.png" type="Texture" id=6]
 [ext_resource path="res://apple.gd" type="Script" id=7]
 [ext_resource path="res://snake_body_collision.gd" type="Script" id=8]
+[ext_resource path="res://assets/background/border.png" type="Texture" id=9]
+[ext_resource path="res://assets/background/score_place.png" type="Texture" id=10]
+[ext_resource path="res://score.gd" type="Script" id=11]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 110.045
@@ -18,12 +21,20 @@ _data = [ Vector2( 0, 1 ), 0.0, 0.156816, 0, 0, Vector2( 1, 0.782209 ), -0.00223
 [sub_resource type="Gradient" id=3]
 colors = PoolColorArray( 0.0196078, 0.686275, 0.0196078, 1, 0.160784, 0.964706, 0.0745098, 1 )
 
-[sub_resource type="CapsuleShape2D" id=5]
-height = 10.0
-
 [sub_resource type="CapsuleShape2D" id=4]
-radius = 15.469
-height = 0.0
+height = 70.8333
+
+[sub_resource type="CapsuleShape2D" id=5]
+radius = 4.99796
+height = 25.2116
+
+[sub_resource type="RectangleShape2D" id=8]
+extents = Vector2( 5, 343.855 )
+
+[sub_resource type="DynamicFont" id=9]
+size = 50
+use_filter = true
+font_data = ExtResource( 4 )
 
 [node name="main" type="Node2D"]
 script = ExtResource( 3 )
@@ -41,11 +52,13 @@ __meta__ = {
 }
 
 [node name="game_board" type="Node2D" parent="."]
-position = Vector2( 37, 137 )
+position = Vector2( 37, 150 )
 
 [node name="board" type="Sprite" parent="game_board"]
+position = Vector2( 223.678, 695.215 )
 texture = ExtResource( 1 )
 centered = false
+offset = Vector2( -223.678, -695.215 )
 
 [node name="apple" type="Area2D" parent="game_board"]
 position = Vector2( 193.5, 236.5 )
@@ -75,25 +88,23 @@ begin_cap_mode = 2
 end_cap_mode = 2
 
 [node name="coll_snake0" type="CollisionShape2D" parent="game_board/snakeBodyArea"]
-position = Vector2( 82.9854, 150.987 )
+position = Vector2( 99.6024, 150.28 )
 rotation = 1.5708
-shape = SubResource( 5 )
+shape = SubResource( 4 )
 
 [node name="head" type="Area2D" parent="game_board"]
 position = Vector2( 150.5, 150.5 )
 rotation = -1.5708
 scale = Vector2( 0.55, 0.55 )
-__meta__ = {
-"_edit_group_": true
-}
 
 [node name="Sprite" type="Sprite" parent="game_board/head"]
 texture = ExtResource( 6 )
 offset = Vector2( 0, 20 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="game_board/head"]
-position = Vector2( 0, 45 )
-shape = SubResource( 4 )
+position = Vector2( 0, 37 )
+rotation = 1.5708
+shape = SubResource( 5 )
 
 [node name="test2" type="Sprite" parent="game_board"]
 visible = false
@@ -113,10 +124,65 @@ __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Node2D" type="Node2D" parent="."]
-visible = false
-script = ExtResource( 4 )
+[node name="border" type="Area2D" parent="game_board"]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="border_sprite" type="Sprite" parent="game_board/border"]
+position = Vector2( 323.252, 340.452 )
+texture = ExtResource( 9 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="game_board/border"]
+position = Vector2( -13.233, 343.759 )
+shape = SubResource( 8 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="game_board/border"]
+position = Vector2( 660, 343.759 )
+shape = SubResource( 8 )
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="game_board/border"]
+position = Vector2( 323.784, 702.482 )
+rotation = 1.5708
+shape = SubResource( 8 )
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="game_board/border"]
+position = Vector2( 323.784, -14.164 )
+rotation = 1.5708
+shape = SubResource( 8 )
+
+[node name="upper_interface" type="Control" parent="."]
+margin_left = 37.0
+margin_right = 682.0
+margin_bottom = 120.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="score" type="Control" parent="upper_interface"]
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="upper_interface/score"]
+position = Vector2( 133.52, 72.2713 )
+texture = ExtResource( 10 )
+
+[node name="Label" type="Label" parent="upper_interface/score"]
+margin_left = 23.0
+margin_top = 36.7755
+margin_right = 246.0
+margin_bottom = 114.775
+custom_fonts/font = SubResource( 9 )
+custom_colors/font_color = Color( 0.101961, 0.168627, 0.054902, 1 )
+text = "Score 150"
+align = 1
+valign = 1
 
 [connection signal="area_entered" from="game_board/apple" to="game_board/apple" method="_on_apple_area_entered"]
 [connection signal="area_entered" from="game_board/apple" to="." method="_on_apple_area_entered"]
 [connection signal="area_entered" from="game_board/snakeBodyArea" to="." method="_on_snakeBodyArea_area_entered"]
+[connection signal="area_entered" from="game_board/border" to="." method="_on_border_area_entered"]
