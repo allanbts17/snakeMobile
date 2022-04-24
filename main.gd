@@ -1,7 +1,7 @@
 extends Node2D
 
 
-onready var snake_body = get_node("game_board/snakeBody")
+onready var snake_body = get_node("game_board/snakeBodyArea/snakeBody")
 onready var snake_head = get_node("game_board/head")
 onready var apple = get_node("game_board/apple")
 onready var test1 = get_node("game_board/test1")
@@ -28,6 +28,13 @@ func _ready():
 	initial_tail_position = Global.board_pos[Vector2(1,3)]
 	Global.solaped_board_squares = [Vector2(3,3),Vector2(2,3),Vector2(1,3)]
 	var v = [2,3,5,6]
+	reset_snake_body()
+	snake_size = get_snake_size()
+	print('snake size: ',snake_size)
+	
+	var curve = snake_body.width_curve
+	print('width curve: ',curve)
+	#print(Vector2(20,15).distance_to(Vector2(0,0)))
 	#v.push_back(10)
 	#print('push back: ',v)
 	#v.pop_front()
@@ -36,15 +43,9 @@ func _ready():
 	#v.insert(1,10)
 	#print('with 10 on 1: ',v)
 	#print('ceil 3.6: ',ceil(3.6))
-	reset_snake_body()
-	
-	
 	#print("Count")
 	#print(snake_body.get_point_count())
 	#print(snake_body.points)
-	snake_size = get_snake_size()
-	print('snake size: ',snake_size)
-	#print(Vector2(20,15).distance_to(Vector2(0,0)))
 
 
 func get_snake_size():
@@ -235,5 +236,12 @@ func _process(delta):
 
 func _on_apple_area_entered(area):
 	
-	print('solaped: ',Global.solaped_board_squares)
+	#print('solaped: ',Global.solaped_board_squares)
 	Global.end_speed = 0
+
+
+func _on_snakeBodyArea_area_entered(area):
+	if area.get_name() == 'head':
+		print('colisión con head')
+		if !Global.body_invincibility:
+			Global.run = false

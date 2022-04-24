@@ -19,6 +19,7 @@ func _ready():
 
 
 func _on_apple_area_entered(area):
+	Global.body_invincibility = false
 	total_solaped_spaces.clear()
 	total_spaces.clear()
 	#total_solaped_spaces = [] + Global.solaped_board_squares
