@@ -63,10 +63,10 @@ height = 70.8333
 
 [sub_resource type="CapsuleShape2D" id=5]
 radius = 4.99796
-height = 25.2116
+height = 8.0
 
 [sub_resource type="RectangleShape2D" id=6]
-extents = Vector2( 5, 343.855 )
+extents = Vector2( 10, 343.855 )
 
 [sub_resource type="DynamicFont" id=7]
 size = 50
@@ -179,7 +179,7 @@ texture = ExtResource( 6 )
 offset = Vector2( 0, 20 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="game_board/head"]
-position = Vector2( 0, 37 )
+position = Vector2( 0, 43.355 )
 rotation = 1.5708
 shape = SubResource( 5 )
 
@@ -258,6 +258,9 @@ custom_colors/font_color = Color( 0.101961, 0.168627, 0.054902, 1 )
 text = "Score 150"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [connection signal="area_entered" from="game_board/food/apple" to="game_board/food/apple" method="_on_apple_area_entered"]
 [connection signal="area_entered" from="game_board/food/apple" to="." method="_on_apple_area_entered"]

@@ -76,7 +76,7 @@ func reach_point_to_board_square(point,prec) -> bool:
 		reach_board_square_ind[point] = index
 	return reached
 	
-func reach_board_square(_delta):
+func reach_board_square(_delta) -> void:
 	if reach_point_to_board_square(0,0.05):
 		Global.solaped_board_squares.push_back(reach_board_square_ind[0])
 		
@@ -249,7 +249,7 @@ func _on_snakeBodyArea_area_entered(area):
 
 
 func _on_border_area_entered(area):
-	if area.get_name() == 'head':
+	if area.get_name() == 'head' and direction_list.size() == 0:
 		print('border')
 		if !Global.invincibility:
 			Global.run = false
