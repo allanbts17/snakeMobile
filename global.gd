@@ -258,6 +258,8 @@ var score = 0
 var invincibility = false
 var body_invincibility = true
 var apple_score = 1
+var scarce_max_score = 10
+var scarce_hide_time = 5
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.

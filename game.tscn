@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://assets/background/board.png" type="Texture" id=1]
 [ext_resource path="res://assets/background/outside_board.png" type="Texture" id=2]
@@ -11,9 +11,46 @@
 [ext_resource path="res://assets/background/border.png" type="Texture" id=9]
 [ext_resource path="res://assets/background/score_place.png" type="Texture" id=10]
 [ext_resource path="res://score.gd" type="Script" id=11]
+[ext_resource path="res://assets/food/scarce1.png" type="Texture" id=12]
+[ext_resource path="res://assets/food/scarce2.png" type="Texture" id=13]
+[ext_resource path="res://assets/food/scarce3.png" type="Texture" id=14]
+[ext_resource path="res://assets/food/scarce4.png" type="Texture" id=15]
+[ext_resource path="res://scarce.gd" type="Script" id=16]
+[ext_resource path="res://animated_scale.shader" type="Shader" id=17]
+
+[sub_resource type="ShaderMaterial" id=12]
+shader = ExtResource( 17 )
+shader_param/time_factor = 1.5
+shader_param/amplitud = 0.8
+
+[sub_resource type="ShaderMaterial" id=11]
+shader = ExtResource( 17 )
+shader_param/time_factor = 1.5
+shader_param/amplitud = 0.8
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 110.045
+
+[sub_resource type="ShaderMaterial" id=13]
+shader = ExtResource( 17 )
+shader_param/time_factor = 1.5
+shader_param/amplitud = 0.8
+
+[sub_resource type="SpriteFrames" id=8]
+animations = [ {
+"frames": [ ExtResource( 12 ), ExtResource( 13 ), ExtResource( 14 ), ExtResource( 15 ) ],
+"loop": true,
+"name": "fruits",
+"speed": 5.0
+} ]
+
+[sub_resource type="ShaderMaterial" id=14]
+shader = ExtResource( 17 )
+shader_param/time_factor = 1.5
+shader_param/amplitud = 0.8
+
+[sub_resource type="CircleShape2D" id=9]
+radius = 130.0
 
 [sub_resource type="Curve" id=2]
 _data = [ Vector2( 0, 1 ), 0.0, 0.156816, 0, 0, Vector2( 1, 0.782209 ), -0.00223913, 0.0, 0, 0 ]
@@ -28,10 +65,10 @@ height = 70.8333
 radius = 4.99796
 height = 25.2116
 
-[sub_resource type="RectangleShape2D" id=8]
+[sub_resource type="RectangleShape2D" id=6]
 extents = Vector2( 5, 343.855 )
 
-[sub_resource type="DynamicFont" id=9]
+[sub_resource type="DynamicFont" id=7]
 size = 50
 use_filter = true
 font_data = ExtResource( 4 )
@@ -60,19 +97,59 @@ texture = ExtResource( 1 )
 centered = false
 offset = Vector2( -223.678, -695.215 )
 
-[node name="apple" type="Area2D" parent="game_board"]
-position = Vector2( 193.5, 236.5 )
+[node name="food" type="Node2D" parent="game_board"]
+
+[node name="apple" type="Area2D" parent="game_board/food"]
+position = Vector2( 236.5, 236.5 )
 scale = Vector2( 0.15, 0.15 )
 script = ExtResource( 7 )
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Sprite" type="Sprite" parent="game_board/apple"]
+[node name="Sprite2" type="Sprite" parent="game_board/food/apple"]
+self_modulate = Color( 0.313726, 0.313726, 0.313726, 1 )
+material = SubResource( 12 )
+position = Vector2( 5, 5 )
 texture = ExtResource( 5 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="game_board/apple"]
+[node name="Sprite" type="Sprite" parent="game_board/food/apple"]
+material = SubResource( 11 )
+texture = ExtResource( 5 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="game_board/food/apple"]
+visible = false
 shape = SubResource( 1 )
+
+[node name="scarce" type="Area2D" parent="game_board/food"]
+position = Vector2( 279.5, 279.5 )
+scale = Vector2( 0.15, 0.15 )
+script = ExtResource( 16 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite2" type="AnimatedSprite" parent="game_board/food/scarce"]
+self_modulate = Color( 0.313726, 0.313726, 0.313726, 1 )
+material = SubResource( 13 )
+position = Vector2( 5, 5 )
+scale = Vector2( 2.5, 2.5 )
+frames = SubResource( 8 )
+animation = "fruits"
+
+[node name="Sprite" type="AnimatedSprite" parent="game_board/food/scarce"]
+material = SubResource( 14 )
+scale = Vector2( 2.5, 2.5 )
+frames = SubResource( 8 )
+animation = "fruits"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="game_board/food/scarce"]
+shape = SubResource( 9 )
+
+[node name="show_timer" type="Timer" parent="game_board/food/scarce"]
+
+[node name="hide_timer" type="Timer" parent="game_board/food/scarce"]
+wait_time = 5.0
 
 [node name="snakeBodyArea" type="Area2D" parent="game_board"]
 script = ExtResource( 8 )
@@ -135,21 +212,21 @@ texture = ExtResource( 9 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="game_board/border"]
 position = Vector2( -13.233, 343.759 )
-shape = SubResource( 8 )
+shape = SubResource( 6 )
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="game_board/border"]
 position = Vector2( 660, 343.759 )
-shape = SubResource( 8 )
+shape = SubResource( 6 )
 
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="game_board/border"]
 position = Vector2( 323.784, 702.482 )
 rotation = 1.5708
-shape = SubResource( 8 )
+shape = SubResource( 6 )
 
 [node name="CollisionShape2D4" type="CollisionShape2D" parent="game_board/border"]
 position = Vector2( 323.784, -14.164 )
 rotation = 1.5708
-shape = SubResource( 8 )
+shape = SubResource( 6 )
 
 [node name="upper_interface" type="Control" parent="."]
 margin_left = 37.0
@@ -176,13 +253,16 @@ margin_left = 23.0
 margin_top = 36.7755
 margin_right = 246.0
 margin_bottom = 114.775
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 7 )
 custom_colors/font_color = Color( 0.101961, 0.168627, 0.054902, 1 )
 text = "Score 150"
 align = 1
 valign = 1
 
-[connection signal="area_entered" from="game_board/apple" to="game_board/apple" method="_on_apple_area_entered"]
-[connection signal="area_entered" from="game_board/apple" to="." method="_on_apple_area_entered"]
+[connection signal="area_entered" from="game_board/food/apple" to="game_board/food/apple" method="_on_apple_area_entered"]
+[connection signal="area_entered" from="game_board/food/apple" to="." method="_on_apple_area_entered"]
+[connection signal="area_entered" from="game_board/food/scarce" to="game_board/food/scarce" method="_on_scarce_area_entered"]
+[connection signal="timeout" from="game_board/food/scarce/show_timer" to="game_board/food/scarce" method="_on_show_timer_timeout"]
+[connection signal="timeout" from="game_board/food/scarce/hide_timer" to="game_board/food/scarce" method="_on_hide_timer_timeout"]
 [connection signal="area_entered" from="game_board/snakeBodyArea" to="." method="_on_snakeBodyArea_area_entered"]
 [connection signal="area_entered" from="game_board/border" to="." method="_on_border_area_entered"]

@@ -3,7 +3,7 @@ extends Node2D
 
 onready var snake_body = get_node("game_board/snakeBodyArea/snakeBody")
 onready var snake_head = get_node("game_board/head")
-onready var apple = get_node("game_board/apple")
+onready var apple = get_node("game_board/food/apple")
 onready var test1 = get_node("game_board/test1")
 onready var test2 = get_node("game_board/test2")
 var snake_size
@@ -242,7 +242,7 @@ func _on_apple_area_entered(area):
 
 func _on_snakeBodyArea_area_entered(area):
 	if area.get_name() == 'head':
-		print('colisión con body')
+		print('body colisiona con head')
 		if !Global.body_invincibility and !Global.invincibility:
 			Global.run = false
 	
@@ -250,6 +250,6 @@ func _on_snakeBodyArea_area_entered(area):
 
 func _on_border_area_entered(area):
 	if area.get_name() == 'head':
-		print('colisión con border')
+		print('border')
 		if !Global.invincibility:
 			Global.run = false

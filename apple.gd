@@ -2,8 +2,9 @@ extends Area2D
 
 var total_solaped_spaces = []
 var total_spaces = []
-onready var head = get_parent().get_node("head")
+onready var head = get_tree().root.get_node("main").get_node("game_board").get_node("head")
 onready var score = get_tree().root.get_node("main").get_node("upper_interface/score")
+onready var scarce = get_parent().get_node("scarce")
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -21,16 +22,19 @@ func _ready():
 
 
 func _on_apple_area_entered(area):
-	Global.body_invincibility = false
-	score.add_score(Global.apple_score)
-	total_solaped_spaces.clear()
-	total_spaces.clear()
-	#total_solaped_spaces = [] + Global.solaped_board_squares
-	fill_total_solaped_spaces()
-	add_head_pos()
-	add_food_pos()
-	filter_total_spaces()
-	reposition()
+	if area.get_name() == 'head':
+		print(str('apple colisiona con ',area.get_name()))
+		Global.body_invincibility = false
+		score.add_score(Global.apple_score)
+		total_solaped_spaces.clear()
+		total_spaces.clear()
+		#total_solaped_spaces = [] + Global.solaped_board_squares
+		fill_total_solaped_spaces()
+		add_head_pos()
+		add_scarce_pos()
+		add_food_pos()
+		filter_total_spaces()
+		reposition()
 	
 func reposition():
 	total_spaces.shuffle()
@@ -47,6 +51,11 @@ func add_head_pos():
 	var head_ind = total_solaped_spaces.find(head.position)
 	if head_ind == -1:
 		total_solaped_spaces.append(head.position)
+		
+func add_scarce_pos():
+	var scarce_ind = total_solaped_spaces.find(scarce.position)
+	if scarce_ind == -1:
+		total_solaped_spaces.append(scarce.position)
 		
 func add_food_pos():
 	var food_ind = total_solaped_spaces.find(position)
