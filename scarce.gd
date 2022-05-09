@@ -6,10 +6,13 @@ onready var head = get_tree().root.get_node("main").get_node("game_board").get_n
 onready var score = get_tree().root.get_node("main").get_node("upper_interface/score")
 onready var apple = get_parent().get_node("apple")
 onready var fruits = get_node("Sprite")
+onready var power_up = get_tree().root.get_node("main").get_node("game_board").get_node("power_ups")
 onready var fruits_shadow = get_node("Sprite2")
 onready var scarce_timer = get_node("show_timer")
 onready var hide_timer = get_node("hide_timer")
-var wait_time_array = [10,30] #10,30
+onready var blinking = get_node("AnimationPlayer")
+onready var animation_duration = 2
+var wait_time_array = [2,4] #10,30
 var wait_time
 var fruit_frames = [0,1,2,3]
 var fruit_frames_ind = 0
@@ -22,8 +25,8 @@ var fruit_frames_ind = 0
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
-	position = Vector2(-500,-500)
-	reset_timer()
+	position = Global.hide_position
+	reset_show_timer()
 	fruit_frames.shuffle()
 	set_fruit_frame()
 
@@ -32,6 +35,7 @@ func _ready():
 #func _process(delta):
 #	pass
 func set_fruit_frame():
+	#print('enter here')
 	fruits.frame = fruit_frames[fruit_frames_ind]
 	fruits_shadow.frame = fruit_frames[fruit_frames_ind]
 	if fruit_frames_ind == 3:
@@ -44,20 +48,14 @@ func frame_ind_increment():
 	else:
 		fruit_frames_ind = 0
 
-func reset_timer():
-	position = Vector2(-500,-500)
+func reset_show_timer():
+	position = Global.hide_position
 	wait_time = round(rand_range(wait_time_array[0],wait_time_array[1]))
 	scarce_timer.wait_time = wait_time
 	scarce_timer.start()
-	print('scarce wait time: ',wait_time)
+	#print('scarce wait time: ',wait_time)
 
-func _on_hide_timer_timeout():
-	reset_timer()
-	set_fruit_frame()
-	
-func _on_show_timer_timeout():
-	hide_timer.start(Global.scarce_hide_time)
-	#score.add_score(Global.apple_score)
+func search_new_position():
 	total_solaped_spaces.clear()
 	total_spaces.clear()
 	#total_solaped_spaces = [] + Global.solaped_board_squares
@@ -65,19 +63,44 @@ func _on_show_timer_timeout():
 	add_head_pos()
 	add_food_pos()
 	add_scarce_pos()
+	add_power_up()
 	filter_total_spaces()
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	#print('hide')
+	blinking.stop(true)
+	modulate = Color( 1, 1, 1, 1 )
+	reset_show_timer()
+	set_fruit_frame()
+
+func _on_hide_timer_timeout():
+	blinking.play("blink")
+	
+func _on_show_timer_timeout():
+	hide_timer.wait_time = Global.scarce_hide_time - animation_duration
+	hide_timer.start()
+	#print('timeout show')
+	#score.add_score(Global.apple_score)
+	search_new_position()
 	reposition()
 
 func _on_scarce_area_entered(area):
 	if area.get_name() == 'head':
 		print(str('scarce colisiona con ',area.get_name()))
-		hide_timer.stop()
+		if not hide_timer.is_stopped():
+			hide_timer.stop()
+		else:
+			blinking.stop(true)
+			modulate = Color( 1, 1, 1, 1 )
 		set_score()
-		reset_timer()
+		reset_show_timer()
 		set_fruit_frame()
 		
 func set_score():
-	var time_passed = Global.scarce_hide_time - hide_timer.time_left
+	var time_passed = Global.scarce_hide_time - (hide_timer.time_left + animation_duration)
+	if blinking.is_playing():
+		time_passed += blinking.get_current_animation_position()
+	print("Time left: ",hide_timer.time_left)
 	var score_num = time_passed * Global.scarce_max_score / Global.scarce_hide_time
 	score_num = clamp(round(score_num),1,Global.scarce_max_score)
 	score.add_score(score_num)
@@ -85,9 +108,6 @@ func set_score():
 func reposition():
 	total_spaces.shuffle()
 	position = total_spaces[0]
-	#Global.score += 1
-	#if Global.score >= 5:
-	#ssss	Global.run = false
 		
 func fill_total_solaped_spaces():
 	for ind in Global.solaped_board_squares:
@@ -107,6 +127,11 @@ func add_scarce_pos():
 	var scarce_ind = total_solaped_spaces.find(position)
 	if scarce_ind == -1:
 		total_solaped_spaces.append(position)
+		
+func add_power_up():
+	var power_ind = total_solaped_spaces.find(power_up.position)
+	if power_ind == -1:
+		total_solaped_spaces.append(power_up.position)
 		
 func filter_total_spaces():
 	dict_to_array()

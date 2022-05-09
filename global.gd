@@ -260,12 +260,22 @@ var body_invincibility = true
 var apple_score = 1
 var scarce_max_score = 10
 var scarce_hide_time = 5
+var power_up_hide_time = 10
+var power_up_counter = {
+	"attract":0,
+	"cut":0,
+	"invincibility":0,
+	"slow_down":0
+}
+var hide_position = Vector2(-100,-100)
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
 
 func test():
 	pass
+	
+
 	#print(pos)
 	#for x in board_squares.x:
 	#	for y in board_squares.y:
