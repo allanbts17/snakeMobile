@@ -4,6 +4,7 @@ var total_solaped_spaces = []
 var total_spaces = []
 onready var head = get_tree().root.get_node("main").get_node("game_board").get_node("head")
 onready var score = get_tree().root.get_node("main").get_node("upper_interface/score")
+onready var power_up = get_tree().root.get_node("main").get_node("game_board").get_node("power_ups")
 onready var scarce = get_parent().get_node("scarce")
 # Declare member variables here. Examples:
 # var a = 2
@@ -33,6 +34,8 @@ func _on_apple_area_entered(area):
 		add_head_pos()
 		add_scarce_pos()
 		add_food_pos()
+		add_power_up()
+		add_mouse_trayectory()
 		filter_total_spaces()
 		reposition()
 	
@@ -61,6 +64,17 @@ func add_food_pos():
 	var food_ind = total_solaped_spaces.find(position)
 	if food_ind == -1:
 		total_solaped_spaces.append(position)
+		
+func add_power_up():
+	var power_ind = total_solaped_spaces.find(power_up.position)
+	if power_ind == -1:
+		total_solaped_spaces.append(power_up.position)
+
+func add_mouse_trayectory():
+	for pos in Global.mouse_trayectory:
+		var mouse_ind = total_solaped_spaces.find(pos)
+		if mouse_ind == -1:
+			total_solaped_spaces.append(pos)
 
 func filter_total_spaces():
 	dict_to_array()

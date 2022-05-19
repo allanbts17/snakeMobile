@@ -18,6 +18,8 @@ var reach_board_square_ind = [null,null]
 var speed_step = 25
 var tail_stop
 var grow_step = 43
+var tween
+var cutting = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	#snake_body.position = Global.board_offset
@@ -27,13 +29,15 @@ func _ready():
 	initial_position = Global.board_pos[Vector2(3,3)]
 	initial_tail_position = Global.board_pos[Vector2(1,3)]
 	Global.solaped_board_squares = [Vector2(3,3),Vector2(2,3),Vector2(1,3)]
-	var v = [2,3,5,6]
+	#var v = [2,3,5,6]
 	reset_snake_body()
 	snake_size = get_snake_size()
 	print('snake size: ',snake_size)
 	
 	var curve = snake_body.width_curve
 	print('width curve: ',curve)
+	tween = Tween.new()
+	add_child(tween)
 	#print(Vector2(20,15).distance_to(Vector2(0,0)))
 	#v.push_back(10)
 	#print('push back: ',v)
@@ -46,8 +50,30 @@ func _ready():
 	#print("Count")
 	#print(snake_body.get_point_count())
 	#print(snake_body.points)
-
-
+func make_transparent():
+	var duration = 0.3
+	var opacity = 0.5
+	var trans_type = Tween.TRANS_LINEAR
+	var ease_type = Tween.EASE_OUT
+	if Global.invincibility:
+		tween.interpolate_property(snake_body,"modulate",Color(1,1,1,1),Color(1,1,1,opacity),duration,trans_type,ease_type)
+		tween.interpolate_property(snake_head,"modulate",Color(1,1,1,1),Color(1,1,1,opacity),duration,trans_type,ease_type)
+	else:
+		tween.interpolate_property(snake_body,"modulate",Color(1,1,1,opacity),Color(1,1,1,1),duration,trans_type,ease_type)
+		tween.interpolate_property(snake_head,"modulate",Color(1,1,1,opacity),Color(1,1,1,1),duration,trans_type,ease_type)
+	tween.start()
+	 
+func cut_body():
+	if cutting:
+		var percentage_reached = get_snake_size() - snake_size*(1-Global.cut_percentage) < 5
+		var max_size_reached =  get_snake_size() <= 80
+		var diff = get_snake_size() - snake_size*(1-Global.cut_percentage)
+		print(diff)
+		if percentage_reached or max_size_reached:
+			print("finished")
+			Global.end_speed = Global.speed
+			cutting = false
+	
 func get_snake_size():
 	var size = 0
 	for i in range(snake_body.get_point_count()):
@@ -118,6 +144,7 @@ func change_velocity():
 		Global.velocity = Global.velocity.normalized() * Global.speed
 	if Global.end_velocity.length() > 0:
 		Global.end_velocity *= Global.end_speed
+	#print("end_velocity: ",Global.end_speed)
 
 func head_reposition(direction):
 	var new_pos = Global.board_pos[reach_board_square_ind[0]]
@@ -229,15 +256,17 @@ func _process(delta):
 		move_snake(delta)
 		reach_board_square(delta)
 		tail_grow()
+		cut_body()
+		#print(get_snake_size())
 	
 	
 	#print(Global.velocity * delta)
 
 
 func _on_apple_area_entered(area):
-	
-	#print('solaped: ',Global.solaped_board_squares)
-	Global.end_speed = 0
+	var cut_power_activated = Global.power_up_is_active == "cut"
+	if area.get_name() == 'head' and not cut_power_activated:
+		Global.end_speed = 0
 
 
 func _on_snakeBodyArea_area_entered(area):

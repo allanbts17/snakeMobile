@@ -64,6 +64,7 @@ func search_new_position():
 	add_food_pos()
 	add_scarce_pos()
 	add_power_up()
+	add_mouse_trayectory()
 	filter_total_spaces()
 
 func _on_AnimationPlayer_animation_finished(anim_name):
@@ -100,7 +101,7 @@ func set_score():
 	var time_passed = Global.scarce_hide_time - (hide_timer.time_left + animation_duration)
 	if blinking.is_playing():
 		time_passed += blinking.get_current_animation_position()
-	print("Time left: ",hide_timer.time_left)
+	#print("Time passed: ",time_passed)
 	var score_num = time_passed * Global.scarce_max_score / Global.scarce_hide_time
 	score_num = clamp(round(score_num),1,Global.scarce_max_score)
 	score.add_score(score_num)
@@ -132,6 +133,12 @@ func add_power_up():
 	var power_ind = total_solaped_spaces.find(power_up.position)
 	if power_ind == -1:
 		total_solaped_spaces.append(power_up.position)
+		
+func add_mouse_trayectory():
+	for pos in Global.mouse_trayectory:
+		var mouse_ind = total_solaped_spaces.find(pos)
+		if mouse_ind == -1:
+			total_solaped_spaces.append(pos)
 		
 func filter_total_spaces():
 	dict_to_array()

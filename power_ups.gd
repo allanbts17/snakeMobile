@@ -47,8 +47,6 @@ func _ready():
 	set_power_up_range()
 	set_power_up()
 	reset_show_timer()
-	#print()
-	#for i in 100:
 	#	set_power_up()
 	pass # Replace with function body.
 
@@ -96,6 +94,7 @@ func search_new_position():
 	add_head_pos()
 	add_food_pos()
 	add_scarce_pos()
+	add_mouse_trayectory()
 	filter_total_spaces()
 	
 func set_power_up():
@@ -114,6 +113,8 @@ func set_power_by_range(number) -> void:
 		selected_power = power_ups_dict[2]
 	else:
 		selected_power = power_ups_dict[3]
+	#test
+	selected_power = power_ups_dict[1]
 
 func set_power_up_range():
 	for x in 4:
@@ -170,6 +171,12 @@ func add_scarce_pos():
 	var scarce_ind = total_solaped_spaces.find(scarce.position)
 	if scarce_ind == -1:
 		total_solaped_spaces.append(scarce.position)
+		
+func add_mouse_trayectory():
+	for pos in Global.mouse_trayectory:
+		var mouse_ind = total_solaped_spaces.find(pos)
+		if mouse_ind == -1:
+			total_solaped_spaces.append(pos)
 		
 func filter_total_spaces():
 	dict_to_array()

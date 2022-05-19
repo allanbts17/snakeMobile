@@ -257,17 +257,31 @@ var run = true
 var score = 0
 var invincibility = false
 var body_invincibility = true
+
+#Scores
 var apple_score = 1
 var scarce_max_score = 10
+var mouse_score = 15
+
+#Hide time
 var scarce_hide_time = 5
 var power_up_hide_time = 10
+var mouse_hide_time = 20
+
+var mouse_trayectory = []
 var power_up_counter = {
 	"attract":0,
 	"cut":0,
 	"invincibility":0,
 	"slow_down":0
 }
-var hide_position = Vector2(-100,-100)
+var power_up_is_active = "" #"" if no power up is active
+
+var power_up_active_time = 7 #puede ser 5
+
+var cut_percentage = 0.60
+var hide_position = Vector2(-500,-500)
+onready var main =  get_node("/root/main")
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
@@ -275,6 +289,36 @@ func _ready():
 func test():
 	pass
 	
+func active_power_up(power):
+	#if power_up_counter[power] > 0:
+	#	power_up_counter[power] -= 1
+	power_up_is_active = power
+	match power:
+		"attract":
+			pass
+		"cut":
+			main.snake_size = main.get_snake_size()
+			main.cutting = true
+			end_speed = speed*3
+		"invincibility":
+			invincibility = true
+			main.make_transparent()
+		"slow_down":
+			pass
+	print(power)
+	
+func power_finished():
+	match power_up_is_active:
+		"attract":
+			pass
+		"cut":
+			pass
+		"invincibility":
+			invincibility = false
+			main.make_transparent()
+		"slow_down":
+			pass
+	power_up_is_active = ""
 
 	#print(pos)
 	#for x in board_squares.x:
