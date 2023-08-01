@@ -94,7 +94,7 @@ func search_new_position():
 	add_head_pos()
 	add_food_pos()
 	add_scarce_pos()
-	add_mouse_trayectory()
+	#add_mouse_trayectory()
 	filter_total_spaces()
 	
 func set_power_up():
@@ -114,7 +114,7 @@ func set_power_by_range(number) -> void:
 	else:
 		selected_power = power_ups_dict[3]
 	#test
-	selected_power = power_ups_dict[1]
+	selected_power = power_ups_dict[0]
 
 func set_power_up_range():
 	for x in 4:

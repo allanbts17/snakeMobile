@@ -4,6 +4,9 @@ extends Node2D
 onready var snake_body = get_node("game_board/snakeBodyArea/snakeBody")
 onready var snake_head = get_node("game_board/head")
 onready var apple = get_node("game_board/food/apple")
+onready var scarce = get_node("game_board/food/scarce")
+#onready var apple = get_node("game_board/food/apple")
+
 onready var test1 = get_node("game_board/test1")
 onready var test2 = get_node("game_board/test2")
 var snake_size
@@ -26,6 +29,7 @@ func _ready():
 	randomize()
 	Global.speed = speed_index * speed_step
 	Global.end_speed = Global.speed
+	
 	initial_position = Global.board_pos[Vector2(3,3)]
 	initial_tail_position = Global.board_pos[Vector2(1,3)]
 	Global.solaped_board_squares = [Vector2(3,3),Vector2(2,3),Vector2(1,3)]
@@ -38,6 +42,7 @@ func _ready():
 	print('width curve: ',curve)
 	tween = Tween.new()
 	add_child(tween)
+	
 	#print(Vector2(20,15).distance_to(Vector2(0,0)))
 	#v.push_back(10)
 	#print('push back: ',v)
@@ -257,10 +262,22 @@ func _process(delta):
 		reach_board_square(delta)
 		tail_grow()
 		cut_body()
+		atractObjects()
 		#print(get_snake_size())
 	
 	
 	#print(Global.velocity * delta)
+	
+func atractObjects():
+	if Global.atracting:
+		Global.set_before_atract_pos()
+		var head_pos = snake_head.position
+		var apple_distance = head_pos.distance_to(apple.position)
+		var scarce_distance = head_pos.distance_to(scarce.position)
+		if apple_distance <= Global.square_size.x*2:
+			apple.position += apple.position.direction_to(head_pos)*Global.atract_velocity/3
+		if scarce_distance <= Global.square_size.x*2:
+			scarce.position +=  scarce.position.direction_to(head_pos)*Global.atract_velocity
 
 
 func _on_apple_area_entered(area):

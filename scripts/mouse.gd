@@ -25,7 +25,7 @@ func _ready():
 	randomize()
 	#set_movement()
 	position = Global.hide_position
-	reset_show_timer()
+	#reset_show_timer()
 
 
 func reset_show_timer():

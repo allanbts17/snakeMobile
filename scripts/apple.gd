@@ -24,6 +24,8 @@ func _ready():
 
 func _on_apple_area_entered(area):
 	if area.get_name() == 'head':
+		if Global.atracting:
+			Global.restore_before_atract_pos()
 		print(str('apple colisiona con ',area.get_name()))
 		Global.body_invincibility = false
 		score.add_score(Global.apple_score)
@@ -35,7 +37,7 @@ func _on_apple_area_entered(area):
 		add_scarce_pos()
 		add_food_pos()
 		add_power_up()
-		add_mouse_trayectory()
+		#add_mouse_trayectory()
 		filter_total_spaces()
 		reposition()
 	

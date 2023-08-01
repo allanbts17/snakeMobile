@@ -64,7 +64,7 @@ func search_new_position():
 	add_food_pos()
 	add_scarce_pos()
 	add_power_up()
-	add_mouse_trayectory()
+	#add_mouse_trayectory()
 	filter_total_spaces()
 
 func _on_AnimationPlayer_animation_finished(anim_name):

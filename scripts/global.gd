@@ -258,6 +258,15 @@ var score = 0
 var invincibility = false
 var body_invincibility = true
 
+#atract
+var atracting = false
+var atract_velocity = 5
+var apple_normal_pos
+var scarce_normal_pos
+
+onready var apple: Area2D = get_node("/root/main/game_board/food/apple")
+onready var scarce: Area2D = get_node("/root/main/game_board/food/scarce")
+
 #Scores
 var apple_score = 1
 var scarce_max_score = 10
@@ -289,12 +298,26 @@ func _ready():
 func test():
 	pass
 	
+func set_before_atract_pos():
+	if apple_normal_pos == null:
+		apple_normal_pos = apple.position
+	pass
+	
+func restore_before_atract_pos():
+	#if apple.position
+	apple.position = apple_normal_pos
+	apple_normal_pos = null
+	
 func active_power_up(power):
 	#if power_up_counter[power] > 0:
 	#	power_up_counter[power] -= 1
 	power_up_is_active = power
 	match power:
 		"attract":
+			var atract_effect: Sprite =  get_node("/root/main/game_board/head/atract_effect")
+			atract_effect.visible = true
+			atracting = true
+			
 			pass
 		"cut":
 			main.snake_size = main.get_snake_size()
@@ -310,6 +333,10 @@ func active_power_up(power):
 func power_finished():
 	match power_up_is_active:
 		"attract":
+			var atract_effect: Sprite =  get_node("/root/main/game_board/head/atract_effect")
+			atract_effect.visible = false
+			atracting = false
+			Global.restore_before_atract_pos()
 			pass
 		"cut":
 			pass
