@@ -1,4 +1,4 @@
-[gd_scene load_steps=58 format=2]
+[gd_scene load_steps=59 format=2]
 
 [ext_resource path="res://assets/background/board.png" type="Texture" id=1]
 [ext_resource path="res://assets/background/outside_board.png" type="Texture" id=2]
@@ -29,6 +29,7 @@
 [ext_resource path="res://scripts/mouse.gd" type="Script" id=27]
 [ext_resource path="res://icon.png" type="Texture" id=28]
 [ext_resource path="res://assets/background/freeze_effect.png" type="Texture" id=29]
+[ext_resource path="res://assets/ui/arrow_button.png" type="Texture" id=30]
 
 [sub_resource type="Shader" id=23]
 code = "shader_type canvas_item;
@@ -740,6 +741,67 @@ __meta__ = {
 }
 
 [node name="Tween" type="Tween" parent="upper_interface/power_ups"]
+
+[node name="lower_interface" type="Node2D" parent="."]
+
+[node name="left" type="TouchScreenButton" parent="lower_interface"]
+position = Vector2( 141.7, 1119.7 )
+rotation = -3.14159
+scale = Vector2( 0.57, 0.57 )
+normal = ExtResource( 30 )
+pressed = ExtResource( 30 )
+action = "ui_a"
+
+[node name="right" type="TouchScreenButton" parent="lower_interface"]
+position = Vector2( 256, 1015 )
+scale = Vector2( 0.57, 0.57 )
+normal = ExtResource( 30 )
+pressed = ExtResource( 30 )
+action = "ui_d"
+
+[node name="up" type="TouchScreenButton" parent="lower_interface"]
+position = Vector2( 147, 1031.7 )
+rotation = -1.5708
+scale = Vector2( 0.57, 0.57 )
+normal = ExtResource( 30 )
+pressed = ExtResource( 30 )
+action = "ui_w"
+
+[node name="down" type="TouchScreenButton" parent="lower_interface"]
+position = Vector2( 251.7, 1111 )
+rotation = 1.5708
+scale = Vector2( 0.57, 0.57 )
+normal = ExtResource( 30 )
+pressed = ExtResource( 30 )
+action = "ui_s"
+
+[node name="p1" type="TouchScreenButton" parent="lower_interface"]
+position = Vector2( 406, 925 )
+scale = Vector2( 0.3, 0.3 )
+normal = ExtResource( 18 )
+pressed = ExtResource( 18 )
+action = "1"
+
+[node name="p2" type="TouchScreenButton" parent="lower_interface"]
+position = Vector2( 563, 925 )
+scale = Vector2( 0.3, 0.3 )
+normal = ExtResource( 19 )
+pressed = ExtResource( 19 )
+action = "2"
+
+[node name="p3" type="TouchScreenButton" parent="lower_interface"]
+position = Vector2( 406, 1084 )
+scale = Vector2( 0.3, 0.3 )
+normal = ExtResource( 20 )
+pressed = ExtResource( 20 )
+action = "3"
+
+[node name="p4" type="TouchScreenButton" parent="lower_interface"]
+position = Vector2( 563, 1084 )
+scale = Vector2( 0.3, 0.3 )
+normal = ExtResource( 23 )
+pressed = ExtResource( 23 )
+action = "4"
 
 [connection signal="area_entered" from="game_board/food/apple" to="." method="_on_apple_area_entered"]
 [connection signal="area_entered" from="game_board/food/apple" to="game_board/food/apple" method="_on_apple_area_entered"]
