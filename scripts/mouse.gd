@@ -90,8 +90,8 @@ func search_new_position():
 	filter_total_spaces()
 
 func set_movement(point):
-	var indx = round_place(((point.x + Global.square_size.x/2)/Global.square_size.x)-1,2)
-	var indy = round_place(((point.y + Global.square_size.y/2)/Global.square_size.y)-1,2)
+	var indx = round_place(((point.x + Global.SQUARE_SIZE.x/2)/Global.SQUARE_SIZE.x)-1,2)
+	var indy = round_place(((point.y + Global.SQUARE_SIZE.y/2)/Global.SQUARE_SIZE.y)-1,2)
 	var pos_vector = Vector2(indx,indy)
 	#first_pos = Vector2(indx,indy)
 	var left = 0
@@ -100,28 +100,28 @@ func set_movement(point):
 	var down = 0
 	
 	#test
-	#total_spaces.erase(Global.board_pos[Vector2(8,10)])
-	#total_spaces.erase(Global.board_pos[Vector2(10,10)])
-	#total_spaces.erase(Global.board_pos[Vector2(9,11)])
+	#total_spaces.erase(Global.BOARD_POS[Vector2(8,10)])
+	#total_spaces.erase(Global.BOARD_POS[Vector2(10,10)])
+	#total_spaces.erase(Global.BOARD_POS[Vector2(9,11)])
 	
 	#Counting spaces to obstacules
-	for x in range(indx,Global.board_squares.x):
-		if total_spaces.find(Global.board_pos[Vector2(x,indy)]) != -1:
+	for x in range(indx,Global.BOARD_SQUARES.x):
+		if total_spaces.find(Global.BOARD_POS[Vector2(x,indy)]) != -1:
 			right += 1
 		else:
 			break
 	for x in range(indx,-1,-1):
-		if total_spaces.find(Global.board_pos[Vector2(x,indy)]) != -1:
+		if total_spaces.find(Global.BOARD_POS[Vector2(x,indy)]) != -1:
 			left += 1
 		else:
 			break
-	for y in range(indy,Global.board_squares.y):
-		if total_spaces.find(Global.board_pos[Vector2(indx,y)]) != -1:
+	for y in range(indy,Global.BOARD_SQUARES.y):
+		if total_spaces.find(Global.BOARD_POS[Vector2(indx,y)]) != -1:
 			down += 1
 		else:
 			break
 	for y in range(indy,-1,-1):
-		if total_spaces.find(Global.board_pos[Vector2(indx,y)]) != -1:
+		if total_spaces.find(Global.BOARD_POS[Vector2(indx,y)]) != -1:
 			up += 1
 		else:
 			break
@@ -184,7 +184,7 @@ func set_movement(point):
 func set_tween(forward):
 	var velocity = 200
 	#print("first_pos on tween: ",first_pos)
-	var duration = abs(Global.board_pos[first_pos].distance_to(Global.board_pos[second_pos])) / velocity
+	var duration = abs(Global.BOARD_POS[first_pos].distance_to(Global.BOARD_POS[second_pos])) / velocity
 	#print("duration: ",duration,", distance: ",first_pos.distance_to(second_pos))
 	var trans_type = Tween.TRANS_LINEAR
 	var ease_type = Tween.EASE_IN_OUT
@@ -195,9 +195,9 @@ func set_tween(forward):
 		get_node("sprite2").flip_h = (second_greater or forward) and (not second_greater or not forward)
 	
 	if forward:
-		tween.interpolate_property(self,"position",Global.board_pos[first_pos],Global.board_pos[second_pos],duration,trans_type,ease_type)
+		tween.interpolate_property(self,"position",Global.BOARD_POS[first_pos],Global.BOARD_POS[second_pos],duration,trans_type,ease_type)
 	else:
-		tween.interpolate_property(self,"position",Global.board_pos[second_pos],Global.board_pos[first_pos],duration,trans_type,ease_type)
+		tween.interpolate_property(self,"position",Global.BOARD_POS[second_pos],Global.BOARD_POS[first_pos],duration,trans_type,ease_type)
 	tween.start()
 	
 func fill_movement_array():
@@ -235,14 +235,14 @@ func reposition():
 	#print('position: ',position)
 	
 	#test
-	#position = Global.board_pos[Vector2(9,10)]
+	#position = Global.BOARD_POS[Vector2(9,10)]
 	
 	set_movement(position)
 	#print()
 		
 func fill_total_solaped_spaces():
 	for ind in Global.solaped_board_squares:
-		total_solaped_spaces.append(Global.board_pos[ind])
+		total_solaped_spaces.append(Global.BOARD_POS[ind])
 		
 func add_head_pos():
 	var head_ind = total_solaped_spaces.find(head.position)
@@ -270,8 +270,8 @@ func filter_total_spaces():
 		total_spaces.erase(_pos)
 		
 func dict_to_array():
-	for key in Global.board_pos:
-		total_spaces.append(Global.board_pos[key])
+	for key in Global.BOARD_POS:
+		total_spaces.append(Global.BOARD_POS[key])
 
 
 

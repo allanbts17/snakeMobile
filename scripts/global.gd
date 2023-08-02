@@ -1,6 +1,7 @@
 extends Node
 
-var board_pos = {
+# Global variables
+const BOARD_POS = {
 	Vector2(0,0):Vector2(21.5,21.5),
 	Vector2(0,1):Vector2(21.5,64.5),
 	Vector2(0,2):Vector2(21.5,107.5),
@@ -242,11 +243,10 @@ var board_pos = {
 	Vector2(14,14):Vector2(623.5,623.5),
 	Vector2(14,15):Vector2(623.5,666.5)
 }
-var board_size = Vector2(645.75,687.45)
-var board_offset = Vector2(37,137)
-var board_squares = Vector2(15,16)
-var square_size = Vector2(43,43)
-var pixels_to_enlarge: float = 20
+const BOARD_OFFSET = Vector2(37,137)
+const BOARD_SQUARES = Vector2(15,16)
+const SQUARE_SIZE = Vector2(43,43)
+
 var speed
 var end_speed
 var velocity
@@ -257,8 +257,10 @@ var run = true
 var score = 0
 var invincibility = false
 var body_invincibility = true
+# var pixels_to_enlarge: float = 20
+# var board_size = Vector2(645.75,687.45)
 
-#atract
+#atract power
 var atracting = false
 var atract_velocity = 5
 var apple_normal_pos
@@ -273,40 +275,45 @@ var scarce_max_score = 10
 var mouse_score = 15
 
 #Hide time
-var scarce_hide_time = 5
+var scarce_hide_time = 30 #5
 var power_up_hide_time = 10
 var mouse_hide_time = 20
 
 var mouse_trayectory = []
+
+# Power up counter
 var power_up_counter = {
 	"attract":0,
 	"cut":0,
 	"invincibility":0,
 	"slow_down":0
 }
-var power_up_is_active = "" #"" if no power up is active
 
+# Power up active
+var power_up_is_active = "" #"" if no power up is active
 var power_up_active_time = 7 #puede ser 5
 
 var cut_percentage = 0.60
 var hide_position = Vector2(-500,-500)
 onready var main =  get_node("/root/main")
-# Called when the node enters the scene tree for the first time.
+
+
 func _ready():
 	pass # Replace with function body.
-
-func test():
-	pass
 	
-func set_before_atract_pos():
+func on_before_atract_food_pos():
 	if apple_normal_pos == null:
 		apple_normal_pos = apple.position
-	pass
-	
-func restore_before_atract_pos():
-	#if apple.position
-	apple.position = apple_normal_pos
-	apple_normal_pos = null
+	if scarce_normal_pos == null:
+		scarce_normal_pos = scarce.position
+
+
+func reset_food_pos():
+	if apple_normal_pos != null:
+		apple.position = apple_normal_pos
+	if scarce_normal_pos != null:
+		scarce.position = scarce_normal_pos
+
 	
 func active_power_up(power):
 	#if power_up_counter[power] > 0:
@@ -336,7 +343,7 @@ func power_finished():
 			var atract_effect: Sprite =  get_node("/root/main/game_board/head/atract_effect")
 			atract_effect.visible = false
 			atracting = false
-			Global.restore_before_atract_pos()
+			Global.reset_food_pos()
 			pass
 		"cut":
 			pass
@@ -346,14 +353,3 @@ func power_finished():
 		"slow_down":
 			pass
 	power_up_is_active = ""
-
-	#print(pos)
-	#for x in board_squares.x:
-	#	for y in board_squares.y:
-	#		pos[Vector2(x,y)] = board_offset + Vector2((x+1)*square_size.x,(y+1)*square_size.y) - square_size/2
-	#		#print(board_pos[Vector2(x,y)])
-	#		print(board_pos)
-	
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass

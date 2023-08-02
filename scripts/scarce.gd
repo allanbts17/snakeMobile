@@ -87,6 +87,8 @@ func _on_show_timer_timeout():
 
 func _on_scarce_area_entered(area):
 	if area.get_name() == 'head':
+		if Global.atracting:
+			Global.scarce_normal_pos = null
 		print(str('scarce colisiona con ',area.get_name()))
 		if not hide_timer.is_stopped():
 			hide_timer.stop()
@@ -112,7 +114,7 @@ func reposition():
 		
 func fill_total_solaped_spaces():
 	for ind in Global.solaped_board_squares:
-		total_solaped_spaces.append(Global.board_pos[ind])
+		total_solaped_spaces.append(Global.BOARD_POS[ind])
 		
 func add_head_pos():
 	var head_ind = total_solaped_spaces.find(head.position)
@@ -148,8 +150,8 @@ func filter_total_spaces():
 	#test()
 		
 func dict_to_array():
-	for key in Global.board_pos:
-		total_spaces.append(Global.board_pos[key])
+	for key in Global.BOARD_POS:
+		total_spaces.append(Global.BOARD_POS[key])
 
 func test():
 	print('Finding spaces test')

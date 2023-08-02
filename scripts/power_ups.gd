@@ -155,7 +155,7 @@ func reposition():
 		
 func fill_total_solaped_spaces():
 	for ind in Global.solaped_board_squares:
-		total_solaped_spaces.append(Global.board_pos[ind])
+		total_solaped_spaces.append(Global.BOARD_POS[ind])
 		
 func add_head_pos():
 	var head_ind = total_solaped_spaces.find(head.position)
@@ -184,5 +184,5 @@ func filter_total_spaces():
 		total_spaces.erase(_pos)
 		
 func dict_to_array():
-	for key in Global.board_pos:
-		total_spaces.append(Global.board_pos[key])
+	for key in Global.BOARD_POS:
+		total_spaces.append(Global.BOARD_POS[key])

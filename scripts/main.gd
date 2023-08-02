@@ -23,15 +23,16 @@ var tail_stop
 var grow_step = 43
 var tween
 var cutting = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	#snake_body.position = Global.board_offset
+	#snake_body.position = Global.BOARD_OFFSET
 	randomize()
 	Global.speed = speed_index * speed_step
 	Global.end_speed = Global.speed
 	
-	initial_position = Global.board_pos[Vector2(3,3)]
-	initial_tail_position = Global.board_pos[Vector2(1,3)]
+	initial_position = Global.BOARD_POS[Vector2(3,3)]
+	initial_tail_position = Global.BOARD_POS[Vector2(1,3)]
 	Global.solaped_board_squares = [Vector2(3,3),Vector2(2,3),Vector2(1,3)]
 	#var v = [2,3,5,6]
 	reset_snake_body()
@@ -55,6 +56,7 @@ func _ready():
 	#print("Count")
 	#print(snake_body.get_point_count())
 	#print(snake_body.points)
+
 func make_transparent():
 	var duration = 0.3
 	var opacity = 0.5
@@ -96,8 +98,8 @@ func reset_snake_body():
 	print('point: ',snake_body.points[0])
 	
 func reach_point_to_board_square(point,prec) -> bool:
-	var indx = round_place(((snake_body.points[point].x + Global.square_size.x/2)/Global.square_size.x)-1,2)
-	var indy = round_place(((snake_body.points[point].y + Global.square_size.y/2)/Global.square_size.y)-1,2)
+	var indx = round_place(((snake_body.points[point].x + Global.SQUARE_SIZE.x/2)/Global.SQUARE_SIZE.x)-1,2)
+	var indy = round_place(((snake_body.points[point].y + Global.SQUARE_SIZE.y/2)/Global.SQUARE_SIZE.y)-1,2)
 	var reached = false
 	if is_int(round_almost_int(indx,prec)) and is_int(round_almost_int(indy,prec)):
 		var index = Vector2(round_almost_int(indx,prec),round_almost_int(indy,prec))
@@ -115,7 +117,7 @@ func reach_board_square(_delta) -> void:
 			Global.direction = direction_list[0]
 			direction_list.pop_front()
 			head_reposition(Global.direction)
-			snake_body.set_point_position(1,Global.board_pos[reach_board_square_ind[0]])
+			snake_body.set_point_position(1,Global.BOARD_POS[reach_board_square_ind[0]])
 			#print(snake_body.points)
 	if reach_point_to_board_square(-1,0.1):
 		Global.solaped_board_squares.pop_front()
@@ -152,7 +154,7 @@ func change_velocity():
 	#print("end_velocity: ",Global.end_speed)
 
 func head_reposition(direction):
-	var new_pos = Global.board_pos[reach_board_square_ind[0]]
+	var new_pos = Global.BOARD_POS[reach_board_square_ind[0]]
 	if direction == "right":
 		new_pos.x += 1
 	if direction == "left":
@@ -242,8 +244,8 @@ func head_orientation():
 func test():
 	var show = true
 	if show and Global.solaped_board_squares.size() != 0:
-		test1.position = Global.board_pos[Global.solaped_board_squares[0]]
-		test2.position = Global.board_pos[Global.solaped_board_squares[-1]]
+		test1.position = Global.BOARD_POS[Global.solaped_board_squares[0]]
+		test2.position = Global.BOARD_POS[Global.solaped_board_squares[-1]]
 		
 func tail_grow():
 	if Global.end_speed == 0:
@@ -270,13 +272,13 @@ func _process(delta):
 	
 func atractObjects():
 	if Global.atracting:
-		Global.set_before_atract_pos()
+		Global.on_before_atract_food_pos()
 		var head_pos = snake_head.position
 		var apple_distance = head_pos.distance_to(apple.position)
 		var scarce_distance = head_pos.distance_to(scarce.position)
-		if apple_distance <= Global.square_size.x*2:
-			apple.position += apple.position.direction_to(head_pos)*Global.atract_velocity/3
-		if scarce_distance <= Global.square_size.x*2:
+		if apple_distance <= Global.SQUARE_SIZE.x*2:
+			apple.position += apple.position.direction_to(head_pos)*Global.atract_velocity
+		if scarce_distance <= Global.SQUARE_SIZE.x*2:
 			scarce.position +=  scarce.position.direction_to(head_pos)*Global.atract_velocity
 
 

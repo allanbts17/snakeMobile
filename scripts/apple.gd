@@ -6,9 +6,6 @@ onready var head = get_tree().root.get_node("main").get_node("game_board").get_n
 onready var score = get_tree().root.get_node("main").get_node("upper_interface/score")
 onready var power_up = get_tree().root.get_node("main").get_node("game_board").get_node("power_ups")
 onready var scarce = get_parent().get_node("scarce")
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
 
 
 # Called when the node enters the scene tree for the first time.
@@ -25,7 +22,7 @@ func _ready():
 func _on_apple_area_entered(area):
 	if area.get_name() == 'head':
 		if Global.atracting:
-			Global.restore_before_atract_pos()
+			Global.apple_normal_pos = null
 		print(str('apple colisiona con ',area.get_name()))
 		Global.body_invincibility = false
 		score.add_score(Global.apple_score)
@@ -50,7 +47,7 @@ func reposition():
 		
 func fill_total_solaped_spaces():
 	for ind in Global.solaped_board_squares:
-		total_solaped_spaces.append(Global.board_pos[ind])
+		total_solaped_spaces.append(Global.BOARD_POS[ind])
 		
 func add_head_pos():
 	var head_ind = total_solaped_spaces.find(head.position)
@@ -86,8 +83,8 @@ func filter_total_spaces():
 	#test()
 		
 func dict_to_array():
-	for key in Global.board_pos:
-		total_spaces.append(Global.board_pos[key])
+	for key in Global.BOARD_POS:
+		total_spaces.append(Global.BOARD_POS[key])
 
 func test():
 	print('Finding spaces test')
