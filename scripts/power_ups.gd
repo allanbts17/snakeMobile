@@ -114,7 +114,7 @@ func set_power_by_range(number) -> void:
 	else:
 		selected_power = power_ups_dict[3]
 	#test
-	selected_power = power_ups_dict[0]
+	#selected_power = power_ups_dict[0]
 
 func set_power_up_range():
 	for x in 4:

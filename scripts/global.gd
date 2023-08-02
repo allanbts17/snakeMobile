@@ -266,8 +266,14 @@ var atract_velocity = 5
 var apple_normal_pos
 var scarce_normal_pos
 
+#slow down power
+var slow_down = false
+var speed_divider = 0.5
+var temporal_speed
+
 onready var apple: Area2D = get_node("/root/main/game_board/food/apple")
 onready var scarce: Area2D = get_node("/root/main/game_board/food/scarce")
+onready var freeze_player: AnimationPlayer = get_node("/root/main/game_board/freeze_effect/AnimationPlayer")
 
 #Scores
 var apple_score = 1
@@ -324,7 +330,6 @@ func active_power_up(power):
 			var atract_effect: Sprite =  get_node("/root/main/game_board/head/atract_effect")
 			atract_effect.visible = true
 			atracting = true
-			
 			pass
 		"cut":
 			main.snake_size = main.get_snake_size()
@@ -334,6 +339,11 @@ func active_power_up(power):
 			invincibility = true
 			main.make_transparent()
 		"slow_down":
+			freeze_player.play("show")
+			# slow_down = true
+			temporal_speed = speed
+			speed = speed * speed_divider
+			end_speed = speed
 			pass
 	print(power)
 	
@@ -351,5 +361,8 @@ func power_finished():
 			invincibility = false
 			main.make_transparent()
 		"slow_down":
+			freeze_player.play("hide")
+			speed = temporal_speed
+			end_speed = speed
 			pass
 	power_up_is_active = ""
