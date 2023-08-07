@@ -10,7 +10,7 @@ onready var progress_ring = {
 onready var tween = get_node("Tween")
 
 func _ready():
-	# Global.power_up_counter["slow_down"] = 10
+	Global.power_up_counter["attract"] = 10
 	pass
 	
 func _process(delta):

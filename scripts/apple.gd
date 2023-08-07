@@ -6,7 +6,7 @@ onready var head = get_tree().root.get_node("main").get_node("game_board").get_n
 onready var score = get_tree().root.get_node("main").get_node("upper_interface/score")
 onready var power_up = get_tree().root.get_node("main").get_node("game_board").get_node("power_ups")
 onready var scarce = get_parent().get_node("scarce")
-
+onready var sfx: Node2D = get_node("/root/main/sfx")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -21,6 +21,7 @@ func _ready():
 
 func _on_apple_area_entered(area):
 	if area.get_name() == 'head':
+		sfx.food_sound()
 		if Global.atracting:
 			Global.apple_normal_pos = null
 		print(str('apple colisiona con ',area.get_name()))

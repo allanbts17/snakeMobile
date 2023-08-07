@@ -11,6 +11,7 @@ onready var hide_timer = get_node("hide_timer")
 onready var blinking = get_node("AnimationPlayer")
 onready var power_sprite = get_node("AnimatedSprite")
 onready var power_up_count = get_tree().root.get_node("main").get_node("upper_interface").get_node("power_ups")
+onready var sfx: Node2D = get_node("/root/main/sfx")
 
 var power_ups_dict = {
 	0:"attract",
@@ -57,6 +58,7 @@ func _process(delta):
 
 func _on_power_ups_area_entered(area):
 	if area.get_name() == 'head':
+		sfx.pick_power_sound()
 		print(str('power-up colisiona con ',area.get_name()))
 		#Global.power_up_counter[selected_power] +=1
 		power_up_count.add(selected_power)

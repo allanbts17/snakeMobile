@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/P2_effect.ogg-48b9c13c278ea0834d9f6632bcabd4ef.oggstr"
+
+[deps]
+
+source_file="res://assets/sfx/P2_effect.ogg"
+dest_files=[ "res://.import/P2_effect.ogg-48b9c13c278ea0834d9f6632bcabd4ef.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

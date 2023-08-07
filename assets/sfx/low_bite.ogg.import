@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/low_bite.ogg-9cb5fd6948605bafd3865162d7e3ef24.oggstr"
+
+[deps]
+
+source_file="res://assets/sfx/low_bite.ogg"
+dest_files=[ "res://.import/low_bite.ogg-9cb5fd6948605bafd3865162d7e3ef24.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

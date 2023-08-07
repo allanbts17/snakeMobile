@@ -6,6 +6,7 @@ onready var snake_head = get_node("game_board/head")
 onready var apple = get_node("game_board/food/apple")
 onready var scarce = get_node("game_board/food/scarce")
 #onready var apple = get_node("game_board/food/apple")
+onready var sfx: Node2D = get_node("/root/main/sfx")
 
 onready var test1 = get_node("game_board/test1")
 onready var test2 = get_node("game_board/test2")
@@ -108,7 +109,7 @@ func reach_point_to_board_square(point,prec) -> bool:
 			#print(reach_board_square_ind[point])
 		reach_board_square_ind[point] = index
 	return reached
-	
+
 func reach_board_square(_delta) -> void:
 	if reach_point_to_board_square(0,0.05):
 		Global.solaped_board_squares.push_back(reach_board_square_ind[0])
@@ -124,15 +125,10 @@ func reach_board_square(_delta) -> void:
 		test()
 		#print(Global.solaped_board_squares)
 	var dist = snake_body.points[-2].distance_to(snake_body.points[-1])
-	if dist < ceil(Global.speed * _delta):
-		#print('enter')
-		#snake_body.remove_point(1)
+	if dist < ceil(Global.end_speed * _delta):
 		snake_body.remove_point(snake_body.get_point_count()-1)
-		#snake_body.points.pop_back()
-		#print(snake_body.points)
-	#print(dist)
-		
-	
+		pass
+
 func change_velocity():
 	Global.velocity = Vector2()
 	Global.end_velocity = Vector2()
@@ -292,6 +288,7 @@ func _on_snakeBodyArea_area_entered(area):
 	if area.get_name() == 'head':
 		print('body colisiona con head')
 		if !Global.body_invincibility and !Global.invincibility:
+			sfx.lose_sound()
 			Global.run = false
 	
 
@@ -300,4 +297,5 @@ func _on_border_area_entered(area):
 	if area.get_name() == 'head' and direction_list.size() == 0:
 		print('border')
 		if !Global.invincibility:
+			sfx.lose_sound()
 			Global.run = false

@@ -5,12 +5,15 @@ var total_spaces = []
 onready var head = get_tree().root.get_node("main").get_node("game_board").get_node("head")
 onready var score = get_tree().root.get_node("main").get_node("upper_interface/score")
 onready var apple = get_parent().get_node("apple")
+onready var scare_score = get_node("/root/main/game_board/score_text")
 onready var fruits = get_node("Sprite")
 onready var power_up = get_tree().root.get_node("main").get_node("game_board").get_node("power_ups")
 onready var fruits_shadow = get_node("Sprite2")
 onready var scarce_timer = get_node("show_timer")
 onready var hide_timer = get_node("hide_timer")
 onready var blinking = get_node("AnimationPlayer")
+onready var sfx: Node2D = get_node("/root/main/sfx")
+
 onready var animation_duration = 2
 var wait_time_array = [2,4] #10,30
 var wait_time
@@ -51,6 +54,7 @@ func frame_ind_increment():
 func reset_show_timer():
 	position = Global.hide_position
 	wait_time = round(rand_range(wait_time_array[0],wait_time_array[1]))
+	#print("wait time:",wait_time)
 	scarce_timer.wait_time = wait_time
 	scarce_timer.start()
 	#print('scarce wait time: ',wait_time)
@@ -84,9 +88,12 @@ func _on_show_timer_timeout():
 	#score.add_score(Global.apple_score)
 	search_new_position()
 	reposition()
+	if Global.atracting:
+		Global.scarce_normal_pos = position
 
 func _on_scarce_area_entered(area):
 	if area.get_name() == 'head':
+		sfx.scarce_sound()
 		if Global.atracting:
 			Global.scarce_normal_pos = null
 		print(str('scarce colisiona con ',area.get_name()))
@@ -106,6 +113,10 @@ func set_score():
 	#print("Time passed: ",time_passed)
 	var score_num = time_passed * Global.scarce_max_score / Global.scarce_hide_time
 	score_num = clamp(round(score_num),1,Global.scarce_max_score)
+	scare_score.get_node("Label").text = str(score_num) + " pts"
+	scare_score.visible = true
+	scare_score.rect_position = Vector2(position.x-scare_score.rect_size.x/2,position.y-scare_score.rect_size.y/2-15)
+	scare_score.get_node("AnimationPlayer").play("show")
 	score.add_score(score_num)
 	
 func reposition():
@@ -158,3 +169,7 @@ func test():
 	for x in total_solaped_spaces:
 		print(total_spaces.find(x))
 	#print(total_spaces)
+
+
+func _on_AnimationPlayer_score_label_animation_finished(anim_name):
+	scare_score.visible = false

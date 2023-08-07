@@ -274,6 +274,7 @@ var temporal_speed
 onready var apple: Area2D = get_node("/root/main/game_board/food/apple")
 onready var scarce: Area2D = get_node("/root/main/game_board/food/scarce")
 onready var freeze_player: AnimationPlayer = get_node("/root/main/game_board/freeze_effect/AnimationPlayer")
+onready var sfx: Node2D = get_node("/root/main/sfx")
 
 #Scores
 var apple_score = 1
@@ -281,7 +282,7 @@ var scarce_max_score = 10
 var mouse_score = 15
 
 #Hide time
-var scarce_hide_time = 30 #5
+var scarce_hide_time = 5 #5
 var power_up_hide_time = 10
 var mouse_hide_time = 20
 
@@ -325,6 +326,7 @@ func active_power_up(power):
 	#if power_up_counter[power] > 0:
 	#	power_up_counter[power] -= 1
 	power_up_is_active = power
+	sfx.power_sound(power,true)
 	match power:
 		"attract":
 			var atract_effect: Sprite =  get_node("/root/main/game_board/head/atract_effect")
@@ -348,12 +350,13 @@ func active_power_up(power):
 	print(power)
 	
 func power_finished():
+	sfx.power_sound(power_up_is_active,false)
 	match power_up_is_active:
 		"attract":
 			var atract_effect: Sprite =  get_node("/root/main/game_board/head/atract_effect")
 			atract_effect.visible = false
 			atracting = false
-			Global.reset_food_pos()
+			reset_food_pos()
 			pass
 		"cut":
 			pass
