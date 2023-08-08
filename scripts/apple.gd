@@ -2,11 +2,11 @@ extends Area2D
 
 var total_solaped_spaces = []
 var total_spaces = []
-onready var head = get_tree().root.get_node("main").get_node("game_board").get_node("head")
-onready var score = get_tree().root.get_node("main").get_node("upper_interface/score")
-onready var power_up = get_tree().root.get_node("main").get_node("game_board").get_node("power_ups")
+onready var head = get_node("/root/main/game").get_node("game_board").get_node("head")
+onready var score = get_node("/root/main/game").get_node("upper_interface/score")
+onready var power_up = get_node("/root/main/game").get_node("game_board").get_node("power_ups")
 onready var scarce = get_parent().get_node("scarce")
-onready var sfx: Node2D = get_node("/root/main/sfx")
+onready var sfx: Node2D = get_node("/root/main/game/sfx")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -21,6 +21,8 @@ func _ready():
 
 func _on_apple_area_entered(area):
 	if area.get_name() == 'head':
+		if Global.power_up_is_active != "cut":
+			Global.end_speed = 0
 		sfx.food_sound()
 		if Global.atracting:
 			Global.apple_normal_pos = null

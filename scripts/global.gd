@@ -253,8 +253,7 @@ var velocity
 var end_velocity
 var solaped_board_squares = []
 var direction = 'right'
-var run = true
-var score = 0
+var run = false
 var invincibility = false
 var body_invincibility = true
 # var pixels_to_enlarge: float = 20
@@ -271,10 +270,14 @@ var slow_down = false
 var speed_divider = 0.5
 var temporal_speed
 
-onready var apple: Area2D = get_node("/root/main/game_board/food/apple")
-onready var scarce: Area2D = get_node("/root/main/game_board/food/scarce")
-onready var freeze_player: AnimationPlayer = get_node("/root/main/game_board/freeze_effect/AnimationPlayer")
-onready var sfx: Node2D = get_node("/root/main/sfx")
+onready var apple: Area2D #= get_node("/root/main/game/game_board/food/apple")
+onready var scarce: Area2D #= get_node("/root/main/game/game_board/food/scarce")
+onready var freeze_player: AnimationPlayer #= get_node("/root/main/game/game_board/freeze_effect/AnimationPlayer")
+onready var sfx: Node2D #= get_node("/root/main/game/sfx")
+
+# Screens
+onready var game: Node2D #= get_node("/root/main/game")
+onready var start_screen: Control = get_node("/root/main/start_screen")
 
 #Scores
 var apple_score = 1
@@ -304,6 +307,35 @@ var cut_percentage = 0.60
 var hide_position = Vector2(-500,-500)
 onready var main =  get_node("/root/main")
 
+var score = 0
+var max_score = 0
+
+func setPathNodes():
+	apple = get_node("/root/main/game/game_board/food/apple")
+	scarce = get_node("/root/main/game/game_board/food/scarce")
+	freeze_player = get_node("/root/main/game/game_board/freeze_effect/AnimationPlayer")
+	sfx = get_node("/root/main/game/sfx")
+	game = get_node("/root/main/game")
+
+
+func set_init_data():
+	solaped_board_squares = []
+	direction = 'right'
+	invincibility = false
+	body_invincibility = true
+	atracting = false
+	apple_normal_pos = null
+	scarce_normal_pos = null
+	slow_down = false
+	temporal_speed = null
+	power_up_is_active = ""
+	power_up_counter = {
+	"attract":0,
+	"cut":0,
+	"invincibility":0,
+	"slow_down":0
+}
+
 
 func _ready():
 	pass # Replace with function body.
@@ -329,17 +361,17 @@ func active_power_up(power):
 	sfx.power_sound(power,true)
 	match power:
 		"attract":
-			var atract_effect: Sprite =  get_node("/root/main/game_board/head/atract_effect")
+			var atract_effect: Sprite =  get_node("/root/main/game/game_board/head/atract_effect")
 			atract_effect.visible = true
 			atracting = true
 			pass
 		"cut":
-			main.snake_size = main.get_snake_size()
-			main.cutting = true
+			game.snake_size = game.get_snake_size()
+			game.cutting = true
 			end_speed = speed*3
 		"invincibility":
 			invincibility = true
-			main.make_transparent()
+			game.make_transparent()
 		"slow_down":
 			freeze_player.play("show")
 			# slow_down = true
@@ -353,7 +385,7 @@ func power_finished():
 	sfx.power_sound(power_up_is_active,false)
 	match power_up_is_active:
 		"attract":
-			var atract_effect: Sprite =  get_node("/root/main/game_board/head/atract_effect")
+			var atract_effect: Sprite =  get_node("/root/main/game/game_board/head/atract_effect")
 			atract_effect.visible = false
 			atracting = false
 			reset_food_pos()
@@ -362,10 +394,40 @@ func power_finished():
 			pass
 		"invincibility":
 			invincibility = false
-			main.make_transparent()
+			game.make_transparent()
 		"slow_down":
 			freeze_player.play("hide")
 			speed = temporal_speed
 			end_speed = speed
 			pass
 	power_up_is_active = ""
+	
+func start_game():
+	main.add_game()
+	setPathNodes()
+	
+func show_help():
+	pass
+	
+func show_score():
+	pass
+	
+func on_lose():
+	var end_game = get_node("/root/main/game/end_game_interface")
+	var ui_score: Label = end_game.get_node("hbox/vbox/Control/score")
+	var ui_max_score: Label = end_game.get_node("hbox/vbox/Control/max_score")
+	max_score = int(max(score,max_score))
+	ui_score.set_text("Puntuación: "+str(score))
+	ui_max_score.set_text("Puntuación máxima: "+str(max_score))
+	end_game.visible = true
+	score = 0
+
+func go_to_main():
+	set_init_data()
+	game.queue_free()
+	start_screen.visible = true
+	
+func restart_game():
+	set_init_data()
+	game.queue_free()
+	start_game()

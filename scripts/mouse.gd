@@ -3,11 +3,11 @@ extends Area2D
 
 var total_solaped_spaces = []
 var total_spaces = []
-onready var head = get_tree().root.get_node("main").get_node("game_board").get_node("head")
-onready var apple = get_tree().root.get_node("main").get_node("game_board").get_node("food/apple")
-onready var scarce = get_tree().root.get_node("main").get_node("game_board").get_node("food/scarce")
-onready var power_up = get_tree().root.get_node("main").get_node("game_board").get_node("power_ups")
-onready var score = get_tree().root.get_node("main").get_node("upper_interface/score")
+onready var head = get_node("/root/main/game").get_node("game_board").get_node("head")
+onready var apple = get_node("/root/main/game").get_node("game_board").get_node("food/apple")
+onready var scarce = get_node("/root/main/game").get_node("game_board").get_node("food/scarce")
+onready var power_up = get_node("/root/main/game").get_node("game_board").get_node("power_ups")
+onready var score = get_node("/root/main/game").get_node("upper_interface/score")
 onready var show_timer = get_node("show_timer")
 onready var hide_timer = get_node("hide_timer")
 onready var blinking = get_node("AnimationPlayer")

@@ -3,15 +3,15 @@ extends Area2D
 
 var total_solaped_spaces = []
 var total_spaces = []
-onready var head = get_tree().root.get_node("main").get_node("game_board").get_node("head")
+onready var head = get_node("/root/main/game").get_node("game_board").get_node("head")
 onready var apple = get_parent().get_node("food/apple")
 onready var scarce = get_parent().get_node("food/scarce")
 onready var show_timer = get_node("show_timer")
 onready var hide_timer = get_node("hide_timer")
 onready var blinking = get_node("AnimationPlayer")
 onready var power_sprite = get_node("AnimatedSprite")
-onready var power_up_count = get_tree().root.get_node("main").get_node("upper_interface").get_node("power_ups")
-onready var sfx: Node2D = get_node("/root/main/sfx")
+onready var power_up_count = get_node("/root/main/game").get_node("upper_interface").get_node("power_ups")
+onready var sfx: Node2D = get_node("/root/main/game/sfx")
 
 var power_ups_dict = {
 	0:"attract",
@@ -43,13 +43,10 @@ var animation_duration = 2
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	#timer.start(5)
 	randomize()
 	set_power_up_range()
 	set_power_up()
 	reset_show_timer()
-	#	set_power_up()
-	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):

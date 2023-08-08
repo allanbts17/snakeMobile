@@ -1,0 +1,123 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://assets/initial_screen/init_background.png" type="Texture" id=1]
+[ext_resource path="res://assets/initial_screen/init_button.png" type="Texture" id=2]
+[ext_resource path="res://assets/initial_screen/init_snake.png" type="Texture" id=3]
+[ext_resource path="res://fonts/Pirate Kids.otf" type="DynamicFontData" id=4]
+[ext_resource path="res://start_ui.gd" type="Script" id=5]
+[ext_resource path="res://assets/initial_screen/init_button_pressed.png" type="Texture" id=6]
+
+[sub_resource type="DynamicFont" id=1]
+size = 100
+outline_size = 6
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 60
+font_data = ExtResource( 4 )
+
+[sub_resource type="StreamTexture" id=3]
+load_path = "res://.import/init_button_pressed.png-790c6da61a86a5c8c3ef140ac8a707f7.stex"
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 5 )
+
+[node name="background" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+centered = false
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="snake" type="Sprite" parent="."]
+position = Vector2( 363, 336 )
+texture = ExtResource( 3 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_top = 647.0
+margin_right = 720.0
+margin_bottom = 1247.0
+custom_constants/separation = 30
+
+[node name="titleContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_right = 720.0
+margin_bottom = 133.0
+alignment = 1
+
+[node name="title" type="Label" parent="VBoxContainer/titleContainer"]
+margin_left = 93.0
+margin_right = 626.0
+margin_bottom = 133.0
+custom_fonts/font = SubResource( 1 )
+text = "Snake Talent"
+align = 1
+
+[node name="startButtonContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 163.0
+margin_right = 720.0
+margin_bottom = 264.0
+alignment = 1
+
+[node name="TextureButton" type="TextureButton" parent="VBoxContainer/startButtonContainer"]
+margin_left = 129.0
+margin_right = 590.0
+margin_bottom = 101.0
+texture_normal = ExtResource( 2 )
+texture_pressed = ExtResource( 6 )
+
+[node name="Label" type="Label" parent="VBoxContainer/startButtonContainer/TextureButton"]
+margin_top = 10.0
+margin_right = 461.0
+margin_bottom = 90.0
+custom_fonts/font = SubResource( 2 )
+text = "Iniciar juego"
+align = 1
+
+[node name="helpButtonContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 294.0
+margin_right = 720.0
+margin_bottom = 395.0
+alignment = 1
+
+[node name="TextureButton" type="TextureButton" parent="VBoxContainer/helpButtonContainer"]
+margin_left = 129.0
+margin_right = 590.0
+margin_bottom = 101.0
+texture_normal = ExtResource( 2 )
+texture_pressed = SubResource( 3 )
+
+[node name="Label" type="Label" parent="VBoxContainer/helpButtonContainer/TextureButton"]
+margin_top = 10.0
+margin_right = 461.0
+margin_bottom = 90.0
+custom_fonts/font = SubResource( 2 )
+text = "Ayuda"
+align = 1
+
+[node name="scoretButtonContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 425.0
+margin_right = 720.0
+margin_bottom = 526.0
+alignment = 1
+
+[node name="TextureButton" type="TextureButton" parent="VBoxContainer/scoretButtonContainer"]
+margin_left = 129.0
+margin_right = 590.0
+margin_bottom = 101.0
+texture_normal = ExtResource( 2 )
+texture_pressed = ExtResource( 6 )
+
+[node name="Label" type="Label" parent="VBoxContainer/scoretButtonContainer/TextureButton"]
+margin_top = 10.0
+margin_right = 461.0
+margin_bottom = 90.0
+custom_fonts/font = SubResource( 2 )
+text = "Puntuación"
+align = 1
+
+[connection signal="pressed" from="VBoxContainer/startButtonContainer/TextureButton" to="." method="_on_StartGameButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/helpButtonContainer/TextureButton" to="." method="_on_HelpButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/scoretButtonContainer/TextureButton" to="." method="_on_ScoreButton_pressed"]

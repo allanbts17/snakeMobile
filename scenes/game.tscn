@@ -1,105 +1,66 @@
-[gd_scene load_steps=83 format=2]
+[gd_scene load_steps=88 format=2]
 
-[ext_resource path="res://assets/background/board.png" type="Texture" id=1]
-[ext_resource path="res://assets/background/outside_board.png" type="Texture" id=2]
-[ext_resource path="res://scripts/main.gd" type="Script" id=3]
-[ext_resource path="res://fonts/Pirate Kids.otf" type="DynamicFontData" id=4]
-[ext_resource path="res://assets/food/apple.png" type="Texture" id=5]
-[ext_resource path="res://assets/snake/head.png" type="Texture" id=6]
-[ext_resource path="res://scripts/apple.gd" type="Script" id=7]
-[ext_resource path="res://scripts/snake_body_collision.gd" type="Script" id=8]
-[ext_resource path="res://assets/background/border.png" type="Texture" id=9]
-[ext_resource path="res://assets/background/score_place.png" type="Texture" id=10]
-[ext_resource path="res://scripts/score.gd" type="Script" id=11]
-[ext_resource path="res://assets/food/scarce1.png" type="Texture" id=12]
-[ext_resource path="res://assets/food/scarce2.png" type="Texture" id=13]
-[ext_resource path="res://assets/food/scarce3.png" type="Texture" id=14]
-[ext_resource path="res://assets/food/scarce4.png" type="Texture" id=15]
-[ext_resource path="res://scripts/scarce.gd" type="Script" id=16]
-[ext_resource path="res://animated_scale.shader" type="Shader" id=17]
-[ext_resource path="res://assets/power_ups/attract.png" type="Texture" id=18]
-[ext_resource path="res://assets/power_ups/cut.png" type="Texture" id=19]
-[ext_resource path="res://assets/power_ups/invincibility.png" type="Texture" id=20]
-[ext_resource path="res://assets/power_ups/ring_off.png" type="Texture" id=21]
-[ext_resource path="res://assets/power_ups/ring_on.png" type="Texture" id=22]
-[ext_resource path="res://assets/power_ups/slow_down.png" type="Texture" id=23]
-[ext_resource path="res://scripts/power_ups.gd" type="Script" id=24]
-[ext_resource path="res://scripts/power_ups_count.gd" type="Script" id=25]
-[ext_resource path="res://assets/food/mouse.png" type="Texture" id=26]
-[ext_resource path="res://scripts/mouse.gd" type="Script" id=27]
-[ext_resource path="res://icon.png" type="Texture" id=28]
-[ext_resource path="res://assets/background/freeze_effect.png" type="Texture" id=29]
-[ext_resource path="res://assets/ui/pressed_right_btn.png" type="Texture" id=30]
-[ext_resource path="res://assets/sfx/P2_effect.ogg" type="AudioStream" id=31]
-[ext_resource path="res://assets/sfx/P1_effect.ogg" type="AudioStream" id=32]
-[ext_resource path="res://assets/sfx/P4_effect.ogg" type="AudioStream" id=33]
-[ext_resource path="res://assets/sfx/bite.ogg" type="AudioStream" id=34]
-[ext_resource path="res://assets/sfx/lose1.ogg" type="AudioStream" id=35]
-[ext_resource path="res://assets/sfx/power_pick.wav" type="AudioStream" id=36]
-[ext_resource path="res://assets/sfx/P3_effect.ogg" type="AudioStream" id=37]
-[ext_resource path="res://scripts/modulate_pressed_button.gd" type="Script" id=38]
-[ext_resource path="res://scripts/sfx.gd" type="Script" id=39]
-[ext_resource path="res://assets/ui/pressed_up_btn.png" type="Texture" id=40]
-[ext_resource path="res://assets/ui/pressed_left_btn.png" type="Texture" id=41]
-[ext_resource path="res://assets/ui/pressed_down_btn.png" type="Texture" id=42]
-[ext_resource path="res://assets/ui/left_btn.png" type="Texture" id=43]
-[ext_resource path="res://assets/ui/up_btn.png" type="Texture" id=44]
-[ext_resource path="res://assets/ui/down_btn.png" type="Texture" id=45]
-[ext_resource path="res://assets/ui/right_btn.png" type="Texture" id=46]
-[ext_resource path="res://assets/sfx/low_bite.ogg" type="AudioStream" id=47]
-[ext_resource path="res://assets/ui/circle_glow.png" type="Texture" id=48]
-
-[sub_resource type="Shader" id=23]
-code = "shader_type canvas_item;
-
-uniform float speed = 1.0;
-uniform vec4 primary_color = vec4(1.0, 0.0, 0.0, 1.0);
-uniform vec4 secondary_color = vec4(0.0, 1.0, 0.0, 1.0);
-uniform float turbulence = 0.2;
-uniform float distortion = 0.1;
-
-void fragment() {
-    float time = TIME * speed;
-    
-    vec2 uv = (UV - vec2(0.5)) * vec2(2.0);
-    float dist = length(uv);
-    
-    // Calcola un effetto di onda concentrica sull'opacità
-    float opacity = sin(dist * 10.0 - time) * 0.5 + 0.5;
-    
-    // Applica una modulazione in base alla distanza dal centro
-    opacity *= smoothstep(0.0, 1.0, 1.0 - dist);
-    
-    // Applica il colore primario e il colore secondario in base all'angolo
-    vec4 color = mix(primary_color, secondary_color, abs(sin(time)));
-    
-    // Applica un effetto di turbolenza al UV
-    uv += vec2(sin(uv.y * turbulence + time), cos(uv.x * turbulence + time)) * distortion;
-    
-    // Applica una distorsione alla coordinata UV in base alla turbolenza
-    vec2 distorted_uv = uv + vec2(sin(uv.y * turbulence + time), cos(uv.x * turbulence + time)) * distortion;
-    
-    // Calcola il colore finale basato sul colore e sulla distorsione
-    vec4 final_color = mix(color, vec4(1.0), length(distorted_uv));
-    
-    COLOR = vec4(final_color.rgb, final_color.a * opacity);
-}"
-
-[sub_resource type="ShaderMaterial" id=24]
-shader = SubResource( 23 )
-shader_param/speed = 1.0
-shader_param/primary_color = Plane( 1, 0, 0, 1 )
-shader_param/secondary_color = Plane( 0, 1, 0, 1 )
-shader_param/turbulence = 0.2
-shader_param/distortion = 0.1
+[ext_resource path="res://fonts/Pirate Kids.otf" type="DynamicFontData" id=1]
+[ext_resource path="res://animated_scale.shader" type="Shader" id=2]
+[ext_resource path="res://assets/food/scarce3.png" type="Texture" id=3]
+[ext_resource path="res://assets/power_ups/cut.png" type="Texture" id=4]
+[ext_resource path="res://assets/background/border.png" type="Texture" id=5]
+[ext_resource path="res://assets/food/scarce4.png" type="Texture" id=6]
+[ext_resource path="res://assets/power_ups/attract.png" type="Texture" id=7]
+[ext_resource path="res://assets/power_ups/ring_on.png" type="Texture" id=8]
+[ext_resource path="res://assets/power_ups/slow_down.png" type="Texture" id=9]
+[ext_resource path="res://assets/snake/head.png" type="Texture" id=10]
+[ext_resource path="res://assets/background/outside_board.png" type="Texture" id=11]
+[ext_resource path="res://assets/power_ups/ring_off.png" type="Texture" id=12]
+[ext_resource path="res://assets/background/board.png" type="Texture" id=13]
+[ext_resource path="res://assets/power_ups/invincibility.png" type="Texture" id=14]
+[ext_resource path="res://assets/background/score_place.png" type="Texture" id=15]
+[ext_resource path="res://assets/food/scarce1.png" type="Texture" id=16]
+[ext_resource path="res://assets/food/apple.png" type="Texture" id=17]
+[ext_resource path="res://assets/food/scarce2.png" type="Texture" id=18]
+[ext_resource path="res://assets/sfx/P4_effect.ogg" type="AudioStream" id=19]
+[ext_resource path="res://assets/background/freeze_effect.png" type="Texture" id=20]
+[ext_resource path="res://assets/food/mouse.png" type="Texture" id=21]
+[ext_resource path="res://assets/sfx/P1_effect.ogg" type="AudioStream" id=22]
+[ext_resource path="res://assets/ui/pressed_left_btn.png" type="Texture" id=23]
+[ext_resource path="res://assets/ui/pressed_up_btn.png" type="Texture" id=24]
+[ext_resource path="res://assets/ui/pressed_right_btn.png" type="Texture" id=25]
+[ext_resource path="res://assets/sfx/P2_effect.ogg" type="AudioStream" id=26]
+[ext_resource path="res://assets/sfx/bite.ogg" type="AudioStream" id=27]
+[ext_resource path="res://assets/sfx/lose1.ogg" type="AudioStream" id=28]
+[ext_resource path="res://icon.png" type="Texture" id=29]
+[ext_resource path="res://assets/sfx/power_pick.wav" type="AudioStream" id=30]
+[ext_resource path="res://assets/sfx/P3_effect.ogg" type="AudioStream" id=31]
+[ext_resource path="res://assets/sfx/low_bite.ogg" type="AudioStream" id=32]
+[ext_resource path="res://assets/ui/pressed_down_btn.png" type="Texture" id=33]
+[ext_resource path="res://assets/ui/left_btn.png" type="Texture" id=34]
+[ext_resource path="res://assets/ui/right_btn.png" type="Texture" id=35]
+[ext_resource path="res://assets/ui/down_btn.png" type="Texture" id=36]
+[ext_resource path="res://assets/ui/up_btn.png" type="Texture" id=37]
+[ext_resource path="res://assets/ui/circle_glow.png" type="Texture" id=38]
+[ext_resource path="res://scenes/game.gd" type="Script" id=39]
+[ext_resource path="res://scripts/scarce.gd" type="Script" id=40]
+[ext_resource path="res://scripts/sfx.gd" type="Script" id=41]
+[ext_resource path="res://scripts/modulate_pressed_button.gd" type="Script" id=42]
+[ext_resource path="res://scripts/snake_body_collision.gd" type="Script" id=43]
+[ext_resource path="res://scripts/mouse.gd" type="Script" id=44]
+[ext_resource path="res://scripts/power_ups.gd" type="Script" id=45]
+[ext_resource path="res://scripts/power_ups_count.gd" type="Script" id=46]
+[ext_resource path="res://scripts/score.gd" type="Script" id=47]
+[ext_resource path="res://assets/initial_screen/init_button.png" type="Texture" id=48]
+[ext_resource path="res://scripts/apple.gd" type="Script" id=49]
+[ext_resource path="res://assets/ui/end_game.png" type="Texture" id=50]
+[ext_resource path="res://themes/new_theme.tres" type="Theme" id=51]
+[ext_resource path="res://assets/initial_screen/init_button_pressed.png" type="Texture" id=52]
+[ext_resource path="res://scenes/end_game_interface.gd" type="Script" id=53]
 
 [sub_resource type="ShaderMaterial" id=1]
-shader = ExtResource( 17 )
+shader = ExtResource( 2 )
 shader_param/time_factor = 1.5
 shader_param/amplitud = 0.8
 
 [sub_resource type="ShaderMaterial" id=2]
-shader = ExtResource( 17 )
+shader = ExtResource( 2 )
 shader_param/time_factor = 1.5
 shader_param/amplitud = 0.8
 
@@ -107,20 +68,20 @@ shader_param/amplitud = 0.8
 radius = 110.045
 
 [sub_resource type="ShaderMaterial" id=4]
-shader = ExtResource( 17 )
+shader = ExtResource( 2 )
 shader_param/time_factor = 1.5
 shader_param/amplitud = 0.8
 
 [sub_resource type="SpriteFrames" id=5]
 animations = [ {
-"frames": [ ExtResource( 12 ), ExtResource( 13 ), ExtResource( 14 ), ExtResource( 15 ) ],
+"frames": [ ExtResource( 16 ), ExtResource( 18 ), ExtResource( 3 ), ExtResource( 6 ) ],
 "loop": true,
 "name": "fruits",
 "speed": 5.0
 } ]
 
 [sub_resource type="ShaderMaterial" id=6]
-shader = ExtResource( 17 )
+shader = ExtResource( 2 )
 shader_param/time_factor = 1.5
 shader_param/amplitud = 0.8
 
@@ -255,13 +216,13 @@ tracks/0/keys = {
 extents = Vector2( 10, 343.855 )
 
 [sub_resource type="ShaderMaterial" id=16]
-shader = ExtResource( 17 )
+shader = ExtResource( 2 )
 shader_param/time_factor = 1.5
 shader_param/amplitud = 0.8
 
 [sub_resource type="SpriteFrames" id=17]
 animations = [ {
-"frames": [ ExtResource( 18 ), ExtResource( 19 ), ExtResource( 20 ), ExtResource( 23 ) ],
+"frames": [ ExtResource( 7 ), ExtResource( 4 ), ExtResource( 14 ), ExtResource( 9 ) ],
 "loop": true,
 "name": "power",
 "speed": 5.0
@@ -330,7 +291,7 @@ outline_size = 1
 outline_color = Color( 0.0627451, 0.478431, 0.113725, 1 )
 use_filter = true
 extra_spacing_char = 2
-font_data = ExtResource( 4 )
+font_data = ExtResource( 1 )
 
 [sub_resource type="Animation" id=34]
 resource_name = "show"
@@ -363,11 +324,11 @@ tracks/1/keys = {
 [sub_resource type="DynamicFont" id=21]
 size = 50
 use_filter = true
-font_data = ExtResource( 4 )
+font_data = ExtResource( 1 )
 
 [sub_resource type="DynamicFont" id=22]
 size = 54
-font_data = ExtResource( 4 )
+font_data = ExtResource( 1 )
 
 [sub_resource type="ConvexPolygonShape2D" id=29]
 points = PoolVector2Array( 0, 260, 105, 0, 360, 257, 105, 510, 0, 260 )
@@ -381,17 +342,20 @@ points = PoolVector2Array( 257, 362, 510, 105, 257, 0, 0, 105, 257, 362 )
 [sub_resource type="ConvexPolygonShape2D" id=32]
 points = PoolVector2Array( 255, 0, 514, 260, 255, 365, 0, 260, 255, 0 )
 
-[node name="main" type="Node2D"]
-material = SubResource( 24 )
-script = ExtResource( 3 )
-__meta__ = {
-"_edit_horizontal_guides_": [ 136.968 ],
-"_edit_vertical_guides_": [ 37.0023 ]
-}
+[sub_resource type="DynamicFont" id=35]
+size = 50
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=36]
+size = 48
+font_data = ExtResource( 1 )
+
+[node name="game" type="Node2D"]
+script = ExtResource( 39 )
 speed_index = 8
 
 [node name="outside_board" type="Sprite" parent="."]
-texture = ExtResource( 2 )
+texture = ExtResource( 11 )
 centered = false
 __meta__ = {
 "_edit_lock_": true
@@ -402,7 +366,7 @@ position = Vector2( 37, 150 )
 
 [node name="board" type="Sprite" parent="game_board"]
 position = Vector2( 223.678, 695.215 )
-texture = ExtResource( 1 )
+texture = ExtResource( 13 )
 centered = false
 offset = Vector2( -223.678, -695.215 )
 
@@ -411,7 +375,7 @@ offset = Vector2( -223.678, -695.215 )
 [node name="apple" type="Area2D" parent="game_board/food"]
 position = Vector2( 236.5, 236.5 )
 scale = Vector2( 0.15, 0.15 )
-script = ExtResource( 7 )
+script = ExtResource( 49 )
 __meta__ = {
 "_edit_group_": true
 }
@@ -420,11 +384,11 @@ __meta__ = {
 self_modulate = Color( 0.313726, 0.313726, 0.313726, 1 )
 material = SubResource( 1 )
 position = Vector2( 5, 5 )
-texture = ExtResource( 5 )
+texture = ExtResource( 17 )
 
 [node name="Sprite" type="Sprite" parent="game_board/food/apple"]
 material = SubResource( 2 )
-texture = ExtResource( 5 )
+texture = ExtResource( 17 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="game_board/food/apple"]
 visible = false
@@ -433,7 +397,7 @@ shape = SubResource( 3 )
 [node name="scarce" type="Area2D" parent="game_board/food"]
 position = Vector2( 279.5, 279.5 )
 scale = Vector2( 0.15, 0.15 )
-script = ExtResource( 16 )
+script = ExtResource( 40 )
 __meta__ = {
 "_edit_group_": true
 }
@@ -468,15 +432,15 @@ anims/blink = SubResource( 8 )
 
 [node name="mouse" type="Area2D" parent="game_board/food"]
 position = Vector2( 279.5, 150.5 )
-script = ExtResource( 27 )
+script = ExtResource( 44 )
 
 [node name="sprite2" type="Sprite" parent="game_board/food/mouse"]
 self_modulate = Color( 0.313726, 0.313726, 0.313726, 1 )
 position = Vector2( 1.5, 1.5 )
-texture = ExtResource( 26 )
+texture = ExtResource( 21 )
 
 [node name="sprite" type="Sprite" parent="game_board/food/mouse"]
-texture = ExtResource( 26 )
+texture = ExtResource( 21 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="game_board/food/mouse"]
 visible = false
@@ -498,7 +462,7 @@ repeat = true
 playback/repeat = true
 
 [node name="snakeBodyArea" type="Area2D" parent="game_board"]
-script = ExtResource( 8 )
+script = ExtResource( 43 )
 
 [node name="snakeBody" type="Line2D" parent="game_board/snakeBodyArea"]
 points = PoolVector2Array( 150.5, 150.5, 64.5, 150.5 )
@@ -524,10 +488,10 @@ scale = Vector2( 0.55, 0.55 )
 visible = false
 material = SubResource( 26 )
 scale = Vector2( 7, 7 )
-texture = ExtResource( 28 )
+texture = ExtResource( 29 )
 
 [node name="Sprite" type="Sprite" parent="game_board/head"]
-texture = ExtResource( 6 )
+texture = ExtResource( 10 )
 offset = Vector2( 0, 20 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="game_board/head"]
@@ -539,7 +503,7 @@ shape = SubResource( 14 )
 visible = false
 position = Vector2( -157.621, 201.577 )
 scale = Vector2( 0.15, 0.15 )
-texture = ExtResource( 5 )
+texture = ExtResource( 17 )
 __meta__ = {
 "_edit_group_": true
 }
@@ -548,7 +512,7 @@ __meta__ = {
 visible = false
 position = Vector2( -126.473, 272.367 )
 scale = Vector2( 0.15, 0.15 )
-texture = ExtResource( 5 )
+texture = ExtResource( 17 )
 __meta__ = {
 "_edit_group_": true
 }
@@ -560,7 +524,7 @@ position = Vector2( -37, -150 )
 [node name="freeze" type="Sprite" parent="game_board/freeze_effect"]
 position = Vector2( 358.631, 491.1 )
 scale = Vector2( 0.903034, 0.905091 )
-texture = ExtResource( 29 )
+texture = ExtResource( 20 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="game_board/freeze_effect"]
 anims/hide = SubResource( 27 )
@@ -573,7 +537,7 @@ __meta__ = {
 
 [node name="border_sprite" type="Sprite" parent="game_board/border"]
 position = Vector2( 323.252, 340.452 )
-texture = ExtResource( 9 )
+texture = ExtResource( 5 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="game_board/border"]
 position = Vector2( -13.233, 343.759 )
@@ -596,7 +560,7 @@ shape = SubResource( 15 )
 [node name="power_ups" type="Area2D" parent="game_board"]
 position = Vector2( -100, -100 )
 scale = Vector2( 0.1, 0.1 )
-script = ExtResource( 24 )
+script = ExtResource( 45 )
 
 [node name="AnimatedSprite2" type="AnimatedSprite" parent="game_board/power_ups"]
 self_modulate = Color( 0.313726, 0.313726, 0.313726, 1 )
@@ -654,14 +618,14 @@ margin_bottom = 120.0
 [node name="score" type="Control" parent="upper_interface"]
 margin_right = 40.0
 margin_bottom = 40.0
-script = ExtResource( 11 )
+script = ExtResource( 47 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Sprite" type="Sprite" parent="upper_interface/score"]
 position = Vector2( 133.52, 72.2713 )
-texture = ExtResource( 10 )
+texture = ExtResource( 15 )
 
 [node name="Label" type="Label" parent="upper_interface/score"]
 margin_left = 23.0
@@ -680,7 +644,7 @@ __meta__ = {
 [node name="power_ups" type="Node2D" parent="upper_interface"]
 position = Vector2( 348, 75 )
 scale = Vector2( 0.85, 0.85 )
-script = ExtResource( 25 )
+script = ExtResource( 46 )
 __meta__ = {
 "_edit_group_": true
 }
@@ -696,8 +660,8 @@ margin_top = -48.5
 margin_right = 48.5
 margin_bottom = 48.5
 rounded = true
-texture_under = ExtResource( 21 )
-texture_progress = ExtResource( 22 )
+texture_under = ExtResource( 12 )
+texture_progress = ExtResource( 8 )
 fill_mode = 4
 __meta__ = {
 "_edit_use_anchors_": false
@@ -705,7 +669,7 @@ __meta__ = {
 
 [node name="power" type="Sprite" parent="upper_interface/power_ups/attract"]
 scale = Vector2( 0.22, 0.22 )
-texture = ExtResource( 18 )
+texture = ExtResource( 7 )
 
 [node name="Label" type="Label" parent="upper_interface/power_ups/attract"]
 margin_left = 12.4642
@@ -732,8 +696,8 @@ margin_top = -48.5
 margin_right = 48.5
 margin_bottom = 48.5
 rounded = true
-texture_under = ExtResource( 21 )
-texture_progress = ExtResource( 22 )
+texture_under = ExtResource( 12 )
+texture_progress = ExtResource( 8 )
 fill_mode = 4
 __meta__ = {
 "_edit_use_anchors_": false
@@ -741,7 +705,7 @@ __meta__ = {
 
 [node name="power" type="Sprite" parent="upper_interface/power_ups/cut"]
 scale = Vector2( 0.22, 0.22 )
-texture = ExtResource( 19 )
+texture = ExtResource( 4 )
 
 [node name="Label" type="Label" parent="upper_interface/power_ups/cut"]
 margin_left = 12.464
@@ -768,8 +732,8 @@ margin_top = -48.5
 margin_right = 48.5
 margin_bottom = 48.5
 rounded = true
-texture_under = ExtResource( 21 )
-texture_progress = ExtResource( 22 )
+texture_under = ExtResource( 12 )
+texture_progress = ExtResource( 8 )
 fill_mode = 4
 __meta__ = {
 "_edit_use_anchors_": false
@@ -777,7 +741,7 @@ __meta__ = {
 
 [node name="power" type="Sprite" parent="upper_interface/power_ups/invincibility"]
 scale = Vector2( 0.22, 0.22 )
-texture = ExtResource( 20 )
+texture = ExtResource( 14 )
 
 [node name="Label" type="Label" parent="upper_interface/power_ups/invincibility"]
 margin_left = 12.464
@@ -804,8 +768,8 @@ margin_top = -48.5
 margin_right = 48.5
 margin_bottom = 48.5
 rounded = true
-texture_under = ExtResource( 21 )
-texture_progress = ExtResource( 22 )
+texture_under = ExtResource( 12 )
+texture_progress = ExtResource( 8 )
 fill_mode = 4
 __meta__ = {
 "_edit_use_anchors_": false
@@ -813,7 +777,7 @@ __meta__ = {
 
 [node name="power" type="Sprite" parent="upper_interface/power_ups/slow_down"]
 scale = Vector2( 0.22, 0.22 )
-texture = ExtResource( 23 )
+texture = ExtResource( 9 )
 
 [node name="Label" type="Label" parent="upper_interface/power_ups/slow_down"]
 margin_left = 12.464
@@ -831,13 +795,13 @@ __meta__ = {
 [node name="Tween" type="Tween" parent="upper_interface/power_ups"]
 
 [node name="lower_interface" type="Node2D" parent="."]
-script = ExtResource( 38 )
+script = ExtResource( 42 )
 
 [node name="left" type="TouchScreenButton" parent="lower_interface"]
 position = Vector2( 20, 936 )
 scale = Vector2( 0.5, 0.5 )
-normal = ExtResource( 43 )
-pressed = ExtResource( 41 )
+normal = ExtResource( 34 )
+pressed = ExtResource( 23 )
 shape = SubResource( 29 )
 shape_centered = false
 action = "ui_a"
@@ -845,8 +809,8 @@ action = "ui_a"
 [node name="right" type="TouchScreenButton" parent="lower_interface"]
 position = Vector2( 200, 935 )
 scale = Vector2( 0.5, 0.5 )
-normal = ExtResource( 46 )
-pressed = ExtResource( 30 )
+normal = ExtResource( 35 )
+pressed = ExtResource( 25 )
 shape = SubResource( 30 )
 shape_centered = false
 action = "ui_d"
@@ -854,8 +818,8 @@ action = "ui_d"
 [node name="up" type="TouchScreenButton" parent="lower_interface"]
 position = Vector2( 72, 883 )
 scale = Vector2( 0.5, 0.5 )
-normal = ExtResource( 44 )
-pressed = ExtResource( 40 )
+normal = ExtResource( 37 )
+pressed = ExtResource( 24 )
 shape = SubResource( 31 )
 shape_centered = false
 action = "ui_w"
@@ -863,8 +827,8 @@ action = "ui_w"
 [node name="down" type="TouchScreenButton" parent="lower_interface"]
 position = Vector2( 72, 1063 )
 scale = Vector2( 0.5, 0.5 )
-normal = ExtResource( 45 )
-pressed = ExtResource( 42 )
+normal = ExtResource( 36 )
+pressed = ExtResource( 33 )
 shape = SubResource( 32 )
 shape_centered = false
 action = "ui_s"
@@ -872,72 +836,168 @@ action = "ui_s"
 [node name="p1" type="TouchScreenButton" parent="lower_interface"]
 position = Vector2( 406, 925 )
 scale = Vector2( 0.3, 0.3 )
-normal = ExtResource( 18 )
-pressed = ExtResource( 18 )
+normal = ExtResource( 7 )
+pressed = ExtResource( 7 )
 action = "1"
 
 [node name="p2" type="TouchScreenButton" parent="lower_interface"]
 position = Vector2( 563, 925 )
 scale = Vector2( 0.3, 0.3 )
-normal = ExtResource( 19 )
-pressed = ExtResource( 19 )
+normal = ExtResource( 4 )
+pressed = ExtResource( 4 )
 action = "2"
 
 [node name="p3" type="TouchScreenButton" parent="lower_interface"]
 position = Vector2( 406, 1084 )
 scale = Vector2( 0.3, 0.3 )
-normal = ExtResource( 20 )
-pressed = ExtResource( 20 )
+normal = ExtResource( 14 )
+pressed = ExtResource( 14 )
 action = "3"
 
 [node name="p4" type="TouchScreenButton" parent="lower_interface"]
 position = Vector2( 563, 1084 )
 scale = Vector2( 0.3, 0.3 )
-normal = ExtResource( 23 )
-pressed = ExtResource( 23 )
+normal = ExtResource( 9 )
+pressed = ExtResource( 9 )
 action = "4"
 
 [node name="Sprite" type="Sprite" parent="lower_interface"]
 position = Vector2( 180, 1010 )
 scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 48 )
+texture = ExtResource( 38 )
 
 [node name="sfx" type="Node2D" parent="."]
-script = ExtResource( 39 )
+script = ExtResource( 41 )
 
 [node name="p1" type="AudioStreamPlayer" parent="sfx"]
-stream = ExtResource( 32 )
+stream = ExtResource( 22 )
 volume_db = -5.0
 
 [node name="p2" type="AudioStreamPlayer" parent="sfx"]
-stream = ExtResource( 31 )
+stream = ExtResource( 26 )
 volume_db = -5.0
 
 [node name="p3" type="AudioStreamPlayer" parent="sfx"]
-stream = ExtResource( 37 )
+stream = ExtResource( 31 )
 
 [node name="p4" type="AudioStreamPlayer" parent="sfx"]
-stream = ExtResource( 33 )
+stream = ExtResource( 19 )
 volume_db = -5.0
 
 [node name="eat_food" type="AudioStreamPlayer" parent="sfx"]
-stream = ExtResource( 34 )
+stream = ExtResource( 27 )
 volume_db = -5.0
 
 [node name="eat_scarce" type="AudioStreamPlayer" parent="sfx"]
-stream = ExtResource( 47 )
+stream = ExtResource( 32 )
 volume_db = -1.0
 pitch_scale = 0.7
 
 [node name="pick_power" type="AudioStreamPlayer" parent="sfx"]
-stream = ExtResource( 36 )
+stream = ExtResource( 30 )
 volume_db = -5.0
 
 [node name="lose" type="AudioStreamPlayer" parent="sfx"]
-stream = ExtResource( 35 )
+stream = ExtResource( 28 )
 volume_db = -5.0
 
-[connection signal="area_entered" from="game_board/food/apple" to="." method="_on_apple_area_entered"]
+[node name="end_game_interface" type="Control" parent="."]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 53 )
+
+[node name="ColorRect" type="ColorRect" parent="end_game_interface"]
+margin_right = 720.0
+margin_bottom = 1280.0
+color = Color( 0, 0, 0, 0.32549 )
+
+[node name="hbox" type="HBoxContainer" parent="end_game_interface"]
+margin_right = 720.0
+margin_bottom = 1280.0
+alignment = 1
+
+[node name="vbox" type="VBoxContainer" parent="end_game_interface/hbox"]
+margin_left = 360.0
+margin_right = 360.0
+margin_bottom = 1280.0
+alignment = 1
+
+[node name="Control" type="Control" parent="end_game_interface/hbox/vbox"]
+margin_top = 640.0
+margin_bottom = 640.0
+
+[node name="Sprite" type="Sprite" parent="end_game_interface/hbox/vbox/Control"]
+texture = ExtResource( 50 )
+
+[node name="title" type="Label" parent="end_game_interface/hbox/vbox/Control"]
+margin_left = -128.0
+margin_top = -240.0
+margin_right = 136.0
+margin_bottom = -173.0
+theme = ExtResource( 51 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 35 )
+text = "Fin del juego"
+
+[node name="score" type="Label" parent="end_game_interface/hbox/vbox/Control"]
+margin_left = -270.0
+margin_top = -84.0
+margin_right = 96.0
+margin_bottom = -11.0
+theme = ExtResource( 51 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Puntuación: 100"
+
+[node name="max_score" type="Label" parent="end_game_interface/hbox/vbox/Control"]
+margin_left = -274.0
+margin_top = 4.0
+margin_right = 290.0
+margin_bottom = 77.0
+theme = ExtResource( 51 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Puntuación máxima: 100"
+
+[node name="end" type="TextureButton" parent="end_game_interface/hbox/vbox/Control"]
+margin_left = 26.0
+margin_top = 122.0
+margin_right = 487.0
+margin_bottom = 223.0
+rect_scale = Vector2( 0.5, 1 )
+texture_normal = ExtResource( 48 )
+texture_pressed = ExtResource( 52 )
+
+[node name="retry" type="TextureButton" parent="end_game_interface/hbox/vbox/Control"]
+margin_left = -244.0
+margin_top = 120.0
+margin_right = 217.0
+margin_bottom = 221.0
+rect_scale = Vector2( 0.5, 1 )
+texture_normal = ExtResource( 48 )
+texture_pressed = ExtResource( 52 )
+
+[node name="end_label" type="Label" parent="end_game_interface/hbox/vbox/Control"]
+margin_left = 12.0
+margin_top = 142.0
+margin_right = 276.0
+margin_bottom = 209.0
+theme = ExtResource( 51 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 35 )
+text = "Salir"
+align = 1
+
+[node name="retry_label" type="Label" parent="end_game_interface/hbox/vbox/Control"]
+margin_left = -258.0
+margin_top = 142.0
+margin_right = 6.0
+margin_bottom = 209.0
+theme = ExtResource( 51 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 36 )
+text = "Reintentar"
+align = 1
+
 [connection signal="area_entered" from="game_board/food/apple" to="game_board/food/apple" method="_on_apple_area_entered"]
 [connection signal="area_entered" from="game_board/food/scarce" to="game_board/food/scarce" method="_on_scarce_area_entered"]
 [connection signal="timeout" from="game_board/food/scarce/show_timer" to="game_board/food/scarce" method="_on_show_timer_timeout"]
@@ -964,3 +1024,5 @@ volume_db = -5.0
 [connection signal="released" from="lower_interface/p3" to="lower_interface" method="_on_p3_released"]
 [connection signal="pressed" from="lower_interface/p4" to="lower_interface" method="_on_p4_pressed"]
 [connection signal="released" from="lower_interface/p4" to="lower_interface" method="_on_p4_released"]
+[connection signal="pressed" from="end_game_interface/hbox/vbox/Control/end" to="end_game_interface" method="_on_end_pressed"]
+[connection signal="pressed" from="end_game_interface/hbox/vbox/Control/retry" to="end_game_interface" method="_on_retry_pressed"]
